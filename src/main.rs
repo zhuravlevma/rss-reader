@@ -1,7 +1,9 @@
 use yew::prelude::*;
-enum Msg {}
 use card::Card;
+use user_list::UserList;
 
+
+enum Msg {}
 struct RootComponent {
     value: i64,
 }
@@ -18,13 +20,17 @@ impl Component for RootComponent {
             <div>
                 <button>{ "+1" }</button>
                 <Card></Card>
+                <UserList></UserList>
             </div>
         }
     }
 }
 
 fn main() {
+    wasm_logger::init(wasm_logger::Config::default());
     yew::start_app::<RootComponent>();
 }
 
 mod card;
+mod api;
+mod user_list;

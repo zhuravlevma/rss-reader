@@ -17,3 +17,6 @@ serde_derive = "1.0.136"
 wasm-bindgen-futures = "0.4"
 gloo-utils = "0.1"
 pulldown-cmark = { version = "0.9", default-features = false }
+gloo-timers = "0.2.3"
+wasm-logger = "0.2.0"
+log = "0.4.6"

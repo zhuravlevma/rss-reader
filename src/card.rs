@@ -1,19 +1,22 @@
 use reqwasm::http::{ReadableStream, Request, RequestMode};
 use std::error::Error;
+use gloo_timers::callback::Interval;
 use yew::{html, Component, Context, Html};
 
 pub enum Msg {
     Test,
     Success(String),
+    Tick,
 }
 
 pub struct Card {
     content: String,
+    interval: Interval,
 }
 
 pub async fn http_get() -> Result<String, Box<dyn Error>> {
-    let res = Request::get("https://habr.com/ru/rss/flows/management/all/?fl=ru")
-        .mode(RequestMode::NoCors)
+    let res = Request::get("https://jsonplaceholder.typicode.com/todos/1")
+        // .mode(RequestMode::NoCors)
         .send()
         .await
         .unwrap();
@@ -26,8 +29,11 @@ impl Component for Card {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
+        let callback = ctx.link().callback(|_| Msg::Tick);
+        let interval = Interval::new(200, move || callback.emit(()));
         Self {
             content: "".to_string(),
+            interval,
         }
     }
 
@@ -37,7 +43,10 @@ impl Component for Card {
             Msg::Test => {
                 ctx.link().send_future(async {
                     match http_get().await {
-                        Ok(data) => Msg::Success(data),
+                        Ok(data) => {
+                            println!("{}", data);
+                            Msg::Success(data)
+                        },
                         Err(_) => Msg::Success("error".to_string()),
                     }
                 });
@@ -50,6 +59,7 @@ impl Component for Card {
                 self.content = data;
                 true
             }
+            _ => true
         }
     }
 
