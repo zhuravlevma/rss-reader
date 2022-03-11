@@ -1,7 +1,6 @@
-use yew::prelude::*;
 use card::Card;
 use user_list::UserList;
-
+use yew::prelude::*;
 
 enum Msg {}
 struct RootComponent {
@@ -31,6 +30,6 @@ fn main() {
     yew::start_app::<RootComponent>();
 }
 
-mod card;
 mod api;
+mod card;
 mod user_list;

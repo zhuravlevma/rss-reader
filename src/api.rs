@@ -1,10 +1,9 @@
+use reqwasm::http::Request;
+use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
-use reqwasm::http::Request;
-use serde::{Deserialize, Serialize};
 use web_sys::RequestMode;
-
 
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct User {

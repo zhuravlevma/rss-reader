@@ -1,6 +1,6 @@
+use gloo_timers::callback::Interval;
 use reqwasm::http::{ReadableStream, Request, RequestMode};
 use std::error::Error;
-use gloo_timers::callback::Interval;
 use yew::{html, Component, Context, Html};
 
 pub enum Msg {
@@ -46,7 +46,7 @@ impl Component for Card {
                         Ok(data) => {
                             println!("{}", data);
                             Msg::Success(data)
-                        },
+                        }
                         Err(_) => Msg::Success("error".to_string()),
                     }
                 });
@@ -59,7 +59,7 @@ impl Component for Card {
                 self.content = data;
                 true
             }
-            _ => true
+            _ => true,
         }
     }
 

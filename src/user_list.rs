@@ -1,17 +1,17 @@
+use crate::api::{get_users, User};
 use gloo_timers::callback::Interval;
-use log::{info};
-use yew::{Component, Context, Html, html};
-use crate::api::{User, get_users};
+use log::info;
+use yew::{html, Component, Context, Html};
 
 pub enum UserListMessage {
     Tick,
     Show,
-    Success(Vec<User>)
+    Success(Vec<User>),
 }
 
 pub struct UserList {
     interval: Interval,
-    users: Vec<User>
+    users: Vec<User>,
 }
 
 impl Component for UserList {
@@ -36,7 +36,7 @@ impl Component for UserList {
                         Ok(data) => {
                             println!("{:?}", data);
                             UserListMessage::Success(data)
-                        },
+                        }
                         Err(_) => UserListMessage::Success(vec![]),
                     }
                 });
@@ -47,7 +47,7 @@ impl Component for UserList {
                 self.users = data;
                 true
             }
-            _ => true
+            _ => true,
         }
     }
 
