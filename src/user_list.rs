@@ -54,11 +54,29 @@ impl Component for UserList {
     fn view(&self, ctx: &Context<Self>) -> Html {
         html!(
             <div>
-                <button onclick={ctx.link().callback(|_| UserListMessage::Show)}>
+                {self.html_show_button(ctx)}
+                {self.html_list()}
+            </div>
+        )
+    }
+}
+
+impl UserList {
+    fn html_list(&self) -> Html {
+        self.users
+            .iter()
+            .map(|el| {
+                html!(
+                    <div>{el.username.clone()}</div>
+                )
+            })
+            .collect::<Html>()
+    }
+    fn html_show_button(&self, ctx: &Context<Self>) -> Html {
+        html!(
+            <button onclick={ctx.link().callback(|_| UserListMessage::Show)}>
                         { "Show users" }
                 </button>
-                <div>{self.users.iter().map(|el| html!(<div>{el.password.clone()}</div>)).collect::<Html>()}</div>
-            </div>
         )
     }
 }

@@ -1,7 +1,7 @@
+use auth::login::Login;
 use card::Card;
 use user_list::UserList;
 use yew::prelude::*;
-
 enum Msg {}
 struct RootComponent {
     value: i64,
@@ -20,6 +20,7 @@ impl Component for RootComponent {
                 <button>{ "+1" }</button>
                 <Card></Card>
                 <UserList></UserList>
+                <Login/>
             </div>
         }
     }
@@ -31,5 +32,6 @@ fn main() {
 }
 
 mod api;
+mod auth;
 mod card;
 mod user_list;
