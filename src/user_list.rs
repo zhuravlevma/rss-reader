@@ -28,15 +28,11 @@ impl Component for UserList {
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
-        println!("{}", "click");
         match msg {
             UserListMessage::Show => {
                 ctx.link().send_future(async {
                     match get_users().await {
-                        Ok(data) => {
-                            println!("{:?}", data);
-                            UserListMessage::Success(data)
-                        }
+                        Ok(data) => UserListMessage::Success(data),
                         Err(_) => UserListMessage::Success(vec![]),
                     }
                 });

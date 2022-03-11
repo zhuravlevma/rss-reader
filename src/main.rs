@@ -2,22 +2,26 @@ use auth::login::Login;
 use card::Card;
 use user_list::UserList;
 use yew::prelude::*;
-enum Msg {}
-struct RootComponent {
-    value: i64,
+use yewdux::prelude::*;
+
+#[derive(Clone, Default)]
+pub struct TokenState {
+    token: String,
 }
+
+enum Msg {}
+struct RootComponent {}
 impl Component for RootComponent {
     type Message = Msg;
     type Properties = ();
 
-    fn create(ctx: &Context<Self>) -> Self {
-        Self { value: 0 }
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self {}
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html {
+    fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
             <div>
-                <button>{ "+1" }</button>
                 <Card></Card>
                 <UserList></UserList>
                 <Login/>
