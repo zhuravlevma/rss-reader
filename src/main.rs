@@ -1,8 +1,7 @@
-use auth::login::Login;
-use card::Card;
-use user_list::UserList;
+use routing::switch;
+use routing::Route;
 use yew::prelude::*;
-use yewdux::prelude::*;
+use yew_router::prelude::*;
 
 #[derive(Clone, Default)]
 pub struct TokenState {
@@ -21,11 +20,9 @@ impl Component for RootComponent {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
-            <div>
-                <Card></Card>
-                <UserList></UserList>
-                <Login/>
-            </div>
+            <BrowserRouter>
+                <Switch<Route> render={Switch::render(switch)} />
+            </BrowserRouter>
         }
     }
 }
@@ -38,4 +35,5 @@ fn main() {
 mod api;
 mod auth;
 mod card;
+mod routing;
 mod user_list;

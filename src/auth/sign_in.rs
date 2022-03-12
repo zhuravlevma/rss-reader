@@ -1,75 +1,85 @@
-use crate::api::login;
-use crate::TokenState;
+use crate::api::sign_in_api;
+use crate::{routing, TokenState};
 use gloo_timers::callback::Interval;
 use log::info;
+use routing::Route;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use web_sys::{EventTarget, HtmlInputElement};
 use yew::{events::Event, html, Component, Context, Html};
+use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
 use yewdux::prelude::BasicStore;
 
-pub enum LoginMessage {
+pub enum SignInMessage {
     Tick,
-    Login,
+    SignIn,
     Success(String),
     InputUsername(String),
     InputPassword(String),
-    State(Rc<TokenState>),
+    TokenState(Rc<TokenState>),
 }
 
-pub struct Login {
+pub enum Stages {
+    SignUp,
+    Success,
+}
+
+pub struct SignIn {
     interval: Interval,
     username: String,
     password: String,
     dispatch: Dispatch<BasicStore<TokenState>>,
     state: Rc<TokenState>,
+    stage: Stages,
 }
 
-impl Component for Login {
-    type Message = LoginMessage;
+impl Component for SignIn {
+    type Message = SignInMessage;
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let callback = ctx.link().callback(|_| LoginMessage::Tick);
+        let callback = ctx.link().callback(|_| SignInMessage::Tick);
         let interval = Interval::new(200, move || callback.emit(()));
-        let dispatch = Dispatch::bridge_state(ctx.link().callback(LoginMessage::State));
+        let dispatch = Dispatch::bridge_state(ctx.link().callback(SignInMessage::TokenState));
         Self {
             username: "".to_string(),
             password: "".to_string(),
             dispatch,
             interval,
             state: Default::default(),
+            stage: Stages::SignUp,
         }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            LoginMessage::InputUsername(username) => {
+            SignInMessage::InputUsername(username) => {
                 self.username = username;
                 true
             }
-            LoginMessage::InputPassword(password) => {
+            SignInMessage::InputPassword(password) => {
                 self.password = password;
                 true
             }
-            LoginMessage::Login => {
+            SignInMessage::SignIn => {
                 let username = self.username.clone();
                 let password = self.password.clone();
                 info!("username: {}; password: {}", username, password);
                 ctx.link().send_future(async {
-                    match login(username, password).await {
-                        Ok(data) => LoginMessage::Success(data.access_token),
-                        Err(_) => LoginMessage::Success("error".to_string()),
+                    match sign_in_api(username, password).await {
+                        Ok(data) => SignInMessage::Success(data.access_token),
+                        Err(_) => SignInMessage::Success("error".to_string()),
                     }
                 });
                 false
             }
-            LoginMessage::Success(token) => {
+            SignInMessage::Success(token) => {
                 self.dispatch.reduce(|s| s.token = token);
+                self.stage = Stages::Success;
                 true
             }
-            LoginMessage::State(state) => {
+            SignInMessage::TokenState(state) => {
                 self.state = state;
                 true
             }
@@ -78,21 +88,29 @@ impl Component for Login {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        info!("login {}", self.state.token);
-        html!(
-            <div>
-                {self.html_input_username(ctx)}
-                {self.html_input_password(ctx)}
-                {self.html_button_login(ctx)}
-            </div>
-        )
+        match self.stage {
+            Stages::SignUp => {
+                html!(
+                    <div>
+                        {self.html_input_username(ctx)}
+                        {self.html_input_password(ctx)}
+                        {self.html_button_login(ctx)}
+                    </div>
+                )
+            }
+            Stages::Success => {
+                html!(
+                    <Redirect<Route> to={Route::Home}/>
+                )
+            }
+        }
     }
 }
 
-impl Login {
+impl SignIn {
     fn html_button_login(&self, ctx: &Context<Self>) -> Html {
         html!(
-            <button onclick={ctx.link().callback(|_| LoginMessage::Login)}>
+            <button onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
                 { "Login" }
             </button>
         )
@@ -102,8 +120,7 @@ impl Login {
         let change = ctx.link().batch_callback(|e: Event| {
             let target: Option<EventTarget> = e.target();
             let input = target.and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
-
-            input.map(|input| LoginMessage::InputUsername(input.value()))
+            input.map(|input| SignInMessage::InputUsername(input.value()))
         });
         html! {
             <div>
@@ -120,14 +137,9 @@ impl Login {
 
     fn html_input_password(&self, ctx: &Context<Self>) -> Html {
         let change = ctx.link().batch_callback(|e: Event| {
-            // When events are created the target is undefined, it's only
-            // when dispatched does the target get added.
             let target: Option<EventTarget> = e.target();
-            // Events can bubble so this listener might catch events from child
-            // elements which are not of type HtmlInputElement
             let input = target.and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
-
-            input.map(|input| LoginMessage::InputPassword(input.value()))
+            input.map(|input| SignInMessage::InputPassword(input.value()))
         });
         html! {
             <div>

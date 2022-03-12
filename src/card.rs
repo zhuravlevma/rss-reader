@@ -1,6 +1,5 @@
 use crate::TokenState;
 use gloo_timers::callback::Interval;
-use log::info;
 use reqwasm::http::Request;
 use std::error::Error;
 use std::rc::Rc;
@@ -71,7 +70,6 @@ impl Component for Card {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        info!("card {}", self.state.token);
         html!(
             <div>
                 <button onclick={ctx.link().callback(|_| Msg::Test)}>

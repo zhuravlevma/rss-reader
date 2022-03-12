@@ -43,7 +43,10 @@ pub struct Body {
     pub password: String,
 }
 
-pub async fn login(username: String, password: String) -> Result<AccessToken, Box<dyn Error>> {
+pub async fn sign_in_api(
+    username: String,
+    password: String,
+) -> Result<AccessToken, Box<dyn Error>> {
     let body = json!({
         "username": username,
         "password": password,
@@ -51,6 +54,24 @@ pub async fn login(username: String, password: String) -> Result<AccessToken, Bo
     let js_body = JsValue::from_serde(&body).unwrap();
     let json = JSON::stringify(&js_body).unwrap();
     let res = Request::post("http://127.0.0.1:3000/login")
+        .header("Content-Type", "application/json")
+        .body(json)
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await?;
+    Ok(res)
+}
+
+pub async fn sign_up_api(username: String, password: String) -> Result<User, Box<dyn Error>> {
+    let body = json!({
+        "username": username,
+        "password": password,
+    });
+    let js_body = JsValue::from_serde(&body).unwrap();
+    let json = JSON::stringify(&js_body).unwrap();
+    let res = Request::post("http://127.0.0.1:3000/user")
         .header("Content-Type", "application/json")
         .body(json)
         .send()
