@@ -1,4 +1,3 @@
-use crate::pages::home::HomePage;
 use routing::switch;
 use routing::Route;
 use yew::prelude::*;
@@ -35,7 +34,6 @@ fn main() {
 }
 
 mod api;
-mod card;
 mod components;
 mod pages;
 mod routing;

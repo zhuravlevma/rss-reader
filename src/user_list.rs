@@ -10,7 +10,7 @@ pub enum UserListMessage {
 }
 
 pub struct UserList {
-    interval: Interval,
+    _interval: Interval,
     users: Vec<User>,
 }
 
@@ -20,10 +20,10 @@ impl Component for UserList {
 
     fn create(ctx: &Context<Self>) -> Self {
         let callback = ctx.link().callback(|_| UserListMessage::Tick);
-        let interval = Interval::new(200, move || callback.emit(()));
+        let _interval = Interval::new(200, move || callback.emit(()));
         Self {
             users: vec![],
-            interval,
+            _interval,
         }
     }
 

@@ -1,13 +1,11 @@
 use crate::components::nav::NavComponent;
-use crate::routing::Route;
 use crate::UserState;
+use content::Content;
 use gloo_timers::callback::Interval;
 use std::rc::Rc;
-use yew::prelude::*;
-use yew_router::prelude::*;
+use yew::{html, Component, Context, Html};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
-
 pub enum Stages {
     Auth,
     UnAuth,
@@ -20,7 +18,7 @@ pub enum HomeMessage {
 pub struct HomePage {
     dispatch: Dispatch<BasicStore<UserState>>,
     state: Rc<UserState>,
-    interval: Interval,
+    _interval: Interval,
     stage: Stages,
 }
 impl Component for HomePage {
@@ -29,11 +27,11 @@ impl Component for HomePage {
 
     fn create(ctx: &Context<Self>) -> Self {
         let callback = ctx.link().callback(|_| HomeMessage::Tick);
-        let interval = Interval::new(200, move || callback.emit(()));
+        let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(HomeMessage::UserState));
         Self {
             dispatch,
-            interval,
+            _interval,
             state: Default::default(),
             stage: Stages::UnAuth,
         }
@@ -54,13 +52,13 @@ impl Component for HomePage {
         }
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html {
+    fn view(&self, _ctx: &Context<Self>) -> Html {
         match self.stage {
             Stages::Auth => {
                 html! (
                     <main>
                         <NavComponent/>
-                        <div>{"Home page"}</div>
+                        <Content />
                     </main>
                 )
             }
@@ -75,3 +73,5 @@ impl Component for HomePage {
         }
     }
 }
+
+mod content;

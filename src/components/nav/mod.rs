@@ -17,7 +17,7 @@ impl Component for NavComponent {
             <nav class="main-nav">
                 <div class="main-nav-logo-container">
                     <Link <Route> classes={"main-nav-link-logo"} to={Route::Home}>
-                        <img class="main-nav-logo" src ="https://user-images.githubusercontent.com/44276887/158059549-a850f2be-112c-4b3a-97b1-a4c30b8fdb25.svg" alt="logo"/>
+                        <img class="main-nav-logo" src ="https://user-images.githubusercontent.com/44276887/158073533-5cdf800e-446f-4516-9ba6-4516fc1d9456.png" alt="logo"/>
                     </Link<Route>>
                     <p>{"RSS reader"}</p>
                 </div>

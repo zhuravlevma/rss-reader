@@ -27,7 +27,7 @@ pub enum Stages {
 }
 
 pub struct SignInPage {
-    interval: Interval,
+    _interval: Interval,
     username: String,
     password: String,
     dispatch: Dispatch<BasicStore<UserState>>,
@@ -41,13 +41,13 @@ impl Component for SignInPage {
 
     fn create(ctx: &Context<Self>) -> Self {
         let callback = ctx.link().callback(|_| SignInMessage::Tick);
-        let interval = Interval::new(200, move || callback.emit(()));
+        let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(SignInMessage::UserState));
         Self {
             username: "".to_string(),
             password: "".to_string(),
             dispatch,
-            interval,
+            _interval,
             state: Default::default(),
             stage: Stages::SignUp,
         }
@@ -97,6 +97,7 @@ impl Component for SignInPage {
                         <NavComponent/>
                         <div class="form-container">
                             <form class="form" onsubmit={change}>
+                                {self.get_header()}
                                 {self.html_input_username(ctx)}
                                 {self.html_input_password(ctx)}
                                 {self.html_button_login(ctx)}
@@ -118,7 +119,7 @@ impl SignInPage {
     fn html_button_login(&self, ctx: &Context<Self>) -> Html {
         html!(
             <div class="form-element">
-                <button class="form-element-button" onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
+                <button cursor="pointer" class="form-element-button" onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
                     { "Login" }
                 </button>
             </div>
@@ -161,5 +162,11 @@ impl SignInPage {
                 />
             </div>
         }
+    }
+
+    fn get_header(&self) -> Html {
+        html!(
+            <h3 class="form-element">{"Please, sign in"}</h3>
+        )
     }
 }

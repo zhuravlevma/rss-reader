@@ -27,7 +27,7 @@ pub enum Stages {
 }
 
 pub struct SignUpPage {
-    interval: Interval,
+    _interval: Interval,
     username: String,
     password: String,
     password_repeat: String,
@@ -42,7 +42,7 @@ impl Component for SignUpPage {
 
     fn create(ctx: &Context<Self>) -> Self {
         let callback = ctx.link().callback(|_| SignUpMessage::Tick);
-        let interval = Interval::new(200, move || callback.emit(()));
+        let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(SignUpMessage::UserState));
         Self {
             username: "".to_string(),
@@ -51,7 +51,7 @@ impl Component for SignUpPage {
             stage: Stages::SignUp,
             dispatch,
             state: Default::default(),
-            interval,
+            _interval,
         }
     }
 
@@ -108,6 +108,7 @@ impl Component for SignUpPage {
                         <NavComponent/>
                         <div class="form-container">
                             <form class="form" onsubmit={change}>
+                                {self.get_header()}
                                 {self.html_input_username(ctx)}
                                 {self.html_input_password(ctx)}
                                 {self.html_input_repeat_password(ctx)}
@@ -128,7 +129,7 @@ impl SignUpPage {
     fn html_button_signup(&self, ctx: &Context<Self>) -> Html {
         html!(
             <div class="form-element">
-                <button class="form-element-button" onclick={ctx.link().callback(|_| SignUpMessage::SignUp)}>
+                <button cursor="pointer" class="form-element-button" onclick={ctx.link().callback(|_| SignUpMessage::SignUp)}>
                     { "SignUp" }
                 </button>
             </div>
@@ -190,5 +191,11 @@ impl SignUpPage {
                 />
             </div>
         }
+    }
+
+    fn get_header(&self) -> Html {
+        html!(
+            <h3 class="form-element">{"Please, sign up"}</h3>
+        )
     }
 }

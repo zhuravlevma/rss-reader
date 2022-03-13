@@ -23,16 +23,6 @@ pub async fn get_users() -> Result<Vec<User>, Box<dyn Error>> {
     Ok(res)
 }
 
-pub async fn get_user(id: &str) -> Result<User, Box<dyn Error>> {
-    let res = Request::get(&format!("http://127.0.0.1:3000/user/{}", id))
-        .send()
-        .await
-        .unwrap()
-        .json()
-        .await?;
-    Ok(res)
-}
-
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct AccessToken {
     pub access_token: String,
@@ -74,6 +64,25 @@ pub async fn sign_up_api(username: String, password: String) -> Result<User, Box
     let res = Request::post("http://127.0.0.1:3000/user")
         .header("Content-Type", "application/json")
         .body(json)
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await?;
+    Ok(res)
+}
+
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+pub struct Link {
+    pub link_id: String,
+    pub name: String,
+    pub link: String,
+    pub user_id: String,
+}
+
+pub async fn get_links(token: String) -> Result<Vec<Link>, Box<dyn Error>> {
+    let res = Request::get("http://127.0.0.1:3000/link")
+        .header("Authorization", &format!("Bearer {}", token))
         .send()
         .await
         .unwrap()
