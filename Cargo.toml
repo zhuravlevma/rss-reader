@@ -9,7 +9,6 @@ edition = "2021"
 yew = {version = "0.19.3" }
 yew-router = "0.16"
 yewdux = "0.7"
-muicss-yew = { git = "https://github.com/AlephAlpha/muicss-yew" }
 wasm-bindgen = "0.2"
 web-sys = "0.3.56"
 reqwasm = "0.4"
