@@ -1,4 +1,4 @@
-use super::auth::{sign_in::SignIn, sign_up::SignUp};
+use crate::pages::{home::HomePage, sign_in::SignInPage, sign_up::SignUpPage};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -17,12 +17,14 @@ pub enum Route {
 
 pub fn switch(routes: &Route) -> Html {
     match routes {
-        Route::Home => html! { <h1>{ "Home" }</h1> },
+        Route::Home => html! {
+            <HomePage />
+        },
         Route::SignIn => html! {
-            <SignIn />
+            <SignInPage />
         },
         Route::SignUp => html! {
-            <SignUp />
+            <SignUpPage />
         },
         Route::NotFound => html! { <h1>{ "404" }</h1> },
     }

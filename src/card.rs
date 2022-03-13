@@ -1,4 +1,4 @@
-use crate::TokenState;
+use crate::UserState;
 use gloo_timers::callback::Interval;
 use reqwasm::http::Request;
 use std::error::Error;
@@ -11,14 +11,14 @@ pub enum Msg {
     Test,
     Success(String),
     Tick,
-    State(Rc<TokenState>),
+    State(Rc<UserState>),
 }
 
 pub struct Card {
     content: String,
     interval: Interval,
-    dispatch: Dispatch<BasicStore<TokenState>>,
-    state: Rc<TokenState>,
+    dispatch: Dispatch<BasicStore<UserState>>,
+    state: Rc<UserState>,
 }
 
 pub async fn http_get() -> Result<String, Box<dyn Error>> {

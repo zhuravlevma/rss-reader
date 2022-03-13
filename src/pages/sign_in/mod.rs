@@ -1,5 +1,6 @@
 use crate::api::sign_in_api;
-use crate::{routing, TokenState};
+use crate::components::nav::NavComponent;
+use crate::{routing, UserState};
 use gloo_timers::callback::Interval;
 use log::info;
 use routing::Route;
@@ -17,7 +18,7 @@ pub enum SignInMessage {
     Success(String),
     InputUsername(String),
     InputPassword(String),
-    TokenState(Rc<TokenState>),
+    UserState(Rc<UserState>),
 }
 
 pub enum Stages {
@@ -25,23 +26,23 @@ pub enum Stages {
     Success,
 }
 
-pub struct SignIn {
+pub struct SignInPage {
     interval: Interval,
     username: String,
     password: String,
-    dispatch: Dispatch<BasicStore<TokenState>>,
-    state: Rc<TokenState>,
+    dispatch: Dispatch<BasicStore<UserState>>,
+    state: Rc<UserState>,
     stage: Stages,
 }
 
-impl Component for SignIn {
+impl Component for SignInPage {
     type Message = SignInMessage;
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
         let callback = ctx.link().callback(|_| SignInMessage::Tick);
         let interval = Interval::new(200, move || callback.emit(()));
-        let dispatch = Dispatch::bridge_state(ctx.link().callback(SignInMessage::TokenState));
+        let dispatch = Dispatch::bridge_state(ctx.link().callback(SignInMessage::UserState));
         Self {
             username: "".to_string(),
             password: "".to_string(),
@@ -79,7 +80,7 @@ impl Component for SignIn {
                 self.stage = Stages::Success;
                 true
             }
-            SignInMessage::TokenState(state) => {
+            SignInMessage::UserState(state) => {
                 self.state = state;
                 true
             }
@@ -91,11 +92,14 @@ impl Component for SignIn {
         match self.stage {
             Stages::SignUp => {
                 html!(
-                    <div>
-                        {self.html_input_username(ctx)}
-                        {self.html_input_password(ctx)}
-                        {self.html_button_login(ctx)}
-                    </div>
+                    <main>
+                        <NavComponent/>
+                        <div>
+                            {self.html_input_username(ctx)}
+                            {self.html_input_password(ctx)}
+                            {self.html_button_login(ctx)}
+                        </div>
+                    </main>
                 )
             }
             Stages::Success => {
@@ -107,7 +111,7 @@ impl Component for SignIn {
     }
 }
 
-impl SignIn {
+impl SignInPage {
     fn html_button_login(&self, ctx: &Context<Self>) -> Html {
         html!(
             <button onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
@@ -123,7 +127,7 @@ impl SignIn {
             input.map(|input| SignInMessage::InputUsername(input.value()))
         });
         html! {
-            <div>
+            <main>
                 <label for="username-input">
                     { "Username:" }
                     <input onchange={change}
@@ -131,7 +135,7 @@ impl SignIn {
                         type="text"
                     />
                 </label>
-            </div>
+            </main>
         }
     }
 
