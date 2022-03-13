@@ -10,4 +10,10 @@ a {
 
 body {
     background-color:#f3e5f5;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+}
+
+button, input {
+    border: none;
 }

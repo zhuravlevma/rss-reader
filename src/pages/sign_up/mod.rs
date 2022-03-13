@@ -5,7 +5,7 @@ use gloo_timers::callback::Interval;
 use log::info;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
-use web_sys::{EventTarget, HtmlInputElement};
+use web_sys::{EventTarget, FocusEvent, HtmlInputElement};
 use yew::{events::Event, html, Component, Context, Html};
 use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
@@ -100,16 +100,19 @@ impl Component for SignUpPage {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let change = |e: FocusEvent| e.prevent_default();
         match self.stage {
             Stages::SignUp => {
                 html!(
-                    <main>
+                    <main class="main-page">
                         <NavComponent/>
-                        <div>
-                            {self.html_input_username(ctx)}
-                            {self.html_input_password(ctx)}
-                            {self.html_input_repeat_password(ctx)}
-                            {self.html_button_signup(ctx)}
+                        <div class="form-container">
+                            <form class="form" onsubmit={change}>
+                                {self.html_input_username(ctx)}
+                                {self.html_input_password(ctx)}
+                                {self.html_input_repeat_password(ctx)}
+                                {self.html_button_signup(ctx)}
+                            </form>
                         </div>
                     </main>
                 )
@@ -124,9 +127,11 @@ impl Component for SignUpPage {
 impl SignUpPage {
     fn html_button_signup(&self, ctx: &Context<Self>) -> Html {
         html!(
-            <button onclick={ctx.link().callback(|_| SignUpMessage::SignUp)}>
-                { "SignUp" }
-            </button>
+            <div class="form-element">
+                <button class="form-element-button" onclick={ctx.link().callback(|_| SignUpMessage::SignUp)}>
+                    { "SignUp" }
+                </button>
+            </div>
         )
     }
 
@@ -137,15 +142,15 @@ impl SignUpPage {
             input.map(|input| SignUpMessage::InputUsername(input.value()))
         });
         html! {
-            <main>
-                <label for="username-input-signup">
+            <div class="form-element">
+                <label class="form-element-label" for="username-input-signup">
                     { "Username:" }
-                    <input onchange={change}
-                        id="username-input-signup"
-                        type="text"
-                    />
                 </label>
-            </main>
+                <input class="form-element-input" onchange={change}
+                    id="username-input-signup"
+                    type="text"
+                />
+            </div>
         }
     }
 
@@ -156,14 +161,14 @@ impl SignUpPage {
             input.map(|input| SignUpMessage::InputPassword(input.value()))
         });
         html! {
-            <div>
-                <label for="password-input-signup">
+            <div class="form-element">
+                <label class="form-element-label" for="password-input-signup">
                     { "Password:" }
-                    <input onchange={change}
-                        id="password-input-signup"
-                        type="text"
-                    />
                 </label>
+                <input class="form-element-input" onchange={change}
+                    id="password-input-signup"
+                    type="password"
+                />
             </div>
         }
     }
@@ -175,14 +180,14 @@ impl SignUpPage {
             input.map(|input| SignUpMessage::InputPasswordRepeat(input.value()))
         });
         html! {
-            <div>
-                <label for="password-input-signup-repeat">
+            <div class="form-element">
+                <label class="form-element-label" for="password-input-signup-repeat">
                     { "Password repeat:" }
-                    <input onchange={change}
-                        id="password-input-signup-repeat"
-                        type="text"
-                    />
                 </label>
+                <input class="form-element-input" onchange={change}
+                    id="password-input-signup-repeat"
+                    type="password"
+                />
             </div>
         }
     }

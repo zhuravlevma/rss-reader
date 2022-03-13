@@ -6,8 +6,8 @@ use log::info;
 use routing::Route;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
-use web_sys::{EventTarget, HtmlInputElement};
-use yew::{events::Event, html, Component, Context, Html};
+use web_sys::{EventTarget, FocusEvent, HtmlInputElement};
+use yew::{events::Event, html, Callback, Component, Context, Html};
 use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
 use yewdux::prelude::BasicStore;
@@ -89,15 +89,18 @@ impl Component for SignInPage {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let change = |e: FocusEvent| e.prevent_default();
         match self.stage {
             Stages::SignUp => {
                 html!(
-                    <main>
+                    <main class="main-page">
                         <NavComponent/>
-                        <div>
-                            {self.html_input_username(ctx)}
-                            {self.html_input_password(ctx)}
-                            {self.html_button_login(ctx)}
+                        <div class="form-container">
+                            <form class="form" onsubmit={change}>
+                                {self.html_input_username(ctx)}
+                                {self.html_input_password(ctx)}
+                                {self.html_button_login(ctx)}
+                            </form>
                         </div>
                     </main>
                 )
@@ -114,28 +117,30 @@ impl Component for SignInPage {
 impl SignInPage {
     fn html_button_login(&self, ctx: &Context<Self>) -> Html {
         html!(
-            <button onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
-                { "Login" }
-            </button>
+            <div class="form-element">
+                <button class="form-element-button" onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
+                    { "Login" }
+                </button>
+            </div>
         )
     }
 
     fn html_input_username(&self, ctx: &Context<Self>) -> Html {
-        let change = ctx.link().batch_callback(|e: Event| {
+        let change: Callback<Event> = ctx.link().batch_callback(|e: Event| {
             let target: Option<EventTarget> = e.target();
             let input = target.and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
             input.map(|input| SignInMessage::InputUsername(input.value()))
         });
         html! {
-            <main>
-                <label for="username-input">
-                    { "Username:" }
-                    <input onchange={change}
+            <div class="form-element">
+                <label class="form-element-label" for="username-input">
+                    { "Username" }
+                </label>
+                <input class="form-element-input" onchange={change}
                         id="username-input"
                         type="text"
-                    />
-                </label>
-            </main>
+                />
+            </div>
         }
     }
 
@@ -146,14 +151,14 @@ impl SignInPage {
             input.map(|input| SignInMessage::InputPassword(input.value()))
         });
         html! {
-            <div>
-                <label for="password-input">
-                    { "Password:" }
-                    <input onchange={change}
-                        id="password-input"
-                        type="text"
-                    />
+            <div class="form-element">
+                <label class="form-element-label" for="password-input">
+                    { "Password" }
                 </label>
+                <input class="form-element-input" onchange={change}
+                    id="password-input"
+                    type="password"
+                />
             </div>
         }
     }
