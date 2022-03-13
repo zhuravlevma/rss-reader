@@ -24,6 +24,7 @@
 
 .form-element-label {
     margin-bottom: 1rem;
+    font-weight: 400;
 }
 
 .form-element-input {
@@ -31,6 +32,7 @@
     height: 40px;
     border: 1px solid black;
     padding: 0.5rem 1rem;
+    font-size: 16px;
 }
 
 .form-element-button {
@@ -40,4 +42,10 @@
     width: 40%;
     margin-top: 0.5rem;
     cursor: pointer;
+    font-size: 18px;
+}
+
+.form-header {
+    font-weight: 700;
+    font-size: 20px;
 }

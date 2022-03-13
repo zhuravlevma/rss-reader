@@ -6,6 +6,7 @@ use std::rc::Rc;
 use yew::{html, Component, Context, Html};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
+
 pub enum Stages {
     Auth,
     UnAuth,

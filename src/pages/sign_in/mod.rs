@@ -166,7 +166,7 @@ impl SignInPage {
 
     fn get_header(&self) -> Html {
         html!(
-            <h3 class="form-element">{"Please, sign in"}</h3>
+            <h3 class="form-element form-header">{"Please, sign in"}</h3>
         )
     }
 }

@@ -59,7 +59,15 @@ impl Component for Content {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! {
-            <div>{self.html_list()}</div>
+            <div class="content">
+                <div class="container-links">
+                    <div class="links-header">{"Links"}</div>
+                    <ul>{self.html_list()}</ul>
+                </div>
+                <ul class="container-content">
+                    <div class="content-header">{"Messages"}</div>
+                </ul>
+            </div>
         }
     }
 }
@@ -70,7 +78,23 @@ impl Content {
             .iter()
             .map(|el| {
                 html!(
-                    <div>{el.link.clone()}</div>
+                    <li class = "link">
+                        <i class="fa-solid fa-link link-icon"></i>
+                        <div class = "link-main">
+                            <div class = "link-name">
+                                <p class = "link-name-label">{"name:"}</p>
+                                <p class = "link-name-content">{el.name.clone()}</p>
+                            </div>
+                            <div class = "link-href">
+                                <p class = "link-href-label">{"link:"}</p>
+                                <a target = "_blank" class = "link-href-content" href={el.link.clone()}>{el.link.clone()}</a>
+                            </div>
+                            <div class = "link-description">
+                                <p class = "link-description-label">{"Description:"}</p>
+                                <p class = "link-description-content">{el.description.clone()}</p>
+                            </div>
+                        </div>
+                    </li>
                 )
             })
             .collect::<Html>()

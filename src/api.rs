@@ -77,6 +77,7 @@ pub struct Link {
     pub link_id: String,
     pub name: String,
     pub link: String,
+    pub description: String,
     pub user_id: String,
 }
 
