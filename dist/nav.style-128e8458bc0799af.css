@@ -6,6 +6,9 @@
     box-shadow: 4px 4px 15px 0px rgba(34, 60, 80, 0.14);
     border-radius: 0.5rem;
     font-weight: 500;
+    width: 100%;
+    display: flex;
+    justify-content:center;
 }
 
 .main-nav-logo {
@@ -16,22 +19,26 @@
     display: flex;
     align-items: center;
     font-weight: bold;
+    width: 90%;
 }
 
 .main-nav-link-logo {
-    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    font-size: 3rem;
+    color: black;
 }
 
 .main-nav-buttons {
     display: flex;
     align-items: center;
+    width: 10%;
 }
 
 .main-nav {
     display: flex;
     justify-content: space-between;
     align-content: center;
-    background-color: #c0b3c2;
+    background-color: #c7c7c7;
     padding: 0.5rem;
     box-shadow: 4px 4px 4px 0px rgba(34, 60, 80, 0.2);
 }

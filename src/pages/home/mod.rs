@@ -1,3 +1,4 @@
+use crate::components::auth_alert::AuthAlertComponent;
 use crate::components::nav::NavComponent;
 use crate::UserState;
 use content::Content;
@@ -6,7 +7,6 @@ use std::rc::Rc;
 use yew::{html, Component, Context, Html};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
-
 pub enum Stages {
     Auth,
     UnAuth,
@@ -67,7 +67,7 @@ impl Component for HomePage {
                 html!(
                     <main>
                         <NavComponent/>
-                        <div>{"UnAuth"}</div>
+                        <AuthAlertComponent/>
                     </main>
                 )
             }

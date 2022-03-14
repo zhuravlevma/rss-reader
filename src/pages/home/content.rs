@@ -1,6 +1,8 @@
-use crate::api::{get_links, Link};
+use crate::api::{get_content, get_links, Link, LinkWithContent};
 use crate::UserState;
 use gloo_timers::callback::Interval;
+use log::info;
+use std::error::Error;
 use std::rc::Rc;
 use yew::{html, Component, Context, Html};
 use yewdux::dispatch::Dispatch;
@@ -10,12 +12,14 @@ pub enum ContentMessage {
     Tick,
     UserState(Rc<UserState>),
     Success(Vec<Link>),
+    SuccessContent(Vec<LinkWithContent>),
 }
 pub struct Content {
     dispatch: Dispatch<BasicStore<UserState>>,
     state: Rc<UserState>,
     _interval: Interval,
     links: Vec<Link>,
+    content: Vec<LinkWithContent>,
 }
 impl Component for Content {
     type Message = ContentMessage;
@@ -30,6 +34,7 @@ impl Component for Content {
             _interval,
             state: Default::default(),
             links: vec![],
+            content: vec![],
         }
     }
 
@@ -47,10 +52,21 @@ impl Component for Content {
                         Err(_) => ContentMessage::Success(vec![]),
                     }
                 });
+                let token = self.state.token.clone();
+                ctx.link().send_future(async {
+                    match get_content(token).await {
+                        Ok(data) => ContentMessage::SuccessContent(data),
+                        Err(_) => ContentMessage::SuccessContent(vec![]),
+                    }
+                });
                 true
             }
             ContentMessage::Success(links) => {
                 self.links = links;
+                true
+            }
+            ContentMessage::SuccessContent(content) => {
+                self.content = content;
                 true
             }
             _ => false,
@@ -66,6 +82,7 @@ impl Component for Content {
                 </div>
                 <ul class="container-content">
                     <div class="content-header">{"Messages"}</div>
+                    <ul>{self.get_content()}</ul>
                 </ul>
             </div>
         }
@@ -94,6 +111,26 @@ impl Content {
                                 <p class = "link-description-content">{el.description.clone()}</p>
                             </div>
                         </div>
+                    </li>
+                )
+            })
+            .collect::<Html>()
+    }
+
+    fn get_content(&self) -> Html {
+        let mut messages = vec![];
+        for elem in &self.content {
+            for content in &elem.content {
+                messages.push(content)
+            }
+        }
+        messages
+            .iter()
+            .map(|el| {
+                html!(
+                    <li>
+                        <div>{el.link_url.clone()}</div>
+                        <div>{el.title.clone()}</div>
                     </li>
                 )
             })

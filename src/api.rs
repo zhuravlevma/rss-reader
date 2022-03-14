@@ -78,11 +78,40 @@ pub struct Link {
     pub name: String,
     pub link: String,
     pub description: String,
-    pub user_id: String,
 }
 
 pub async fn get_links(token: String) -> Result<Vec<Link>, Box<dyn Error>> {
     let res = Request::get("http://127.0.0.1:3000/link")
+        .header("Authorization", &format!("Bearer {}", token))
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await?;
+    Ok(res)
+}
+
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+pub struct LinkWithContent {
+    pub link_id: String,
+    pub name: String,
+    pub link: String,
+    pub description: String,
+    pub content: Vec<Content>,
+}
+
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+pub struct Content {
+    pub content_id: String,
+    pub link_url: String,
+    pub title: String,
+    pub description: Option<String>,
+    pub date: String,
+    pub link_id: String,
+}
+
+pub async fn get_content(token: String) -> Result<Vec<LinkWithContent>, Box<dyn Error>> {
+    let res = Request::get("http://127.0.0.1:3000/content")
         .header("Authorization", &format!("Bearer {}", token))
         .send()
         .await
