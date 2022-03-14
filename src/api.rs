@@ -120,3 +120,25 @@ pub async fn get_content(token: String) -> Result<Vec<LinkWithContent>, Box<dyn 
         .await?;
     Ok(res)
 }
+
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+pub struct ContentModel {
+    pub content_id: String,
+    pub link_url: String,
+    pub title: String,
+    pub description: Option<String>,
+    pub date: String,
+    pub link_id: String,
+    pub logo_url: String,
+}
+
+pub async fn get_normal_content(token: String) -> Result<Vec<ContentModel>, Box<dyn Error>> {
+    let res = Request::get("http://127.0.0.1:3000/content")
+        .header("Authorization", &format!("Bearer {}", token))
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await?;
+    Ok(res)
+}

@@ -1,4 +1,4 @@
-use crate::api::{get_content, get_links, Link, LinkWithContent};
+use crate::api::{get_content, get_links, get_normal_content, ContentModel, Link, LinkWithContent};
 use crate::UserState;
 use gloo_timers::callback::Interval;
 use log::info;
@@ -13,6 +13,7 @@ pub enum ContentMessage {
     UserState(Rc<UserState>),
     Success(Vec<Link>),
     SuccessContent(Vec<LinkWithContent>),
+    SuccessContentNormal(Vec<ContentModel>),
 }
 pub struct Content {
     dispatch: Dispatch<BasicStore<UserState>>,
@@ -20,6 +21,7 @@ pub struct Content {
     _interval: Interval,
     links: Vec<Link>,
     content: Vec<LinkWithContent>,
+    content_normal: Vec<ContentModel>,
 }
 impl Component for Content {
     type Message = ContentMessage;
@@ -35,6 +37,7 @@ impl Component for Content {
             state: Default::default(),
             links: vec![],
             content: vec![],
+            content_normal: vec![],
         }
     }
 
@@ -59,6 +62,14 @@ impl Component for Content {
                         Err(_) => ContentMessage::SuccessContent(vec![]),
                     }
                 });
+
+                let token = self.state.token.clone();
+                ctx.link().send_future(async {
+                    match get_normal_content(token).await {
+                        Ok(data) => ContentMessage::SuccessContentNormal(data),
+                        Err(_) => ContentMessage::SuccessContent(vec![]),
+                    }
+                });
                 true
             }
             ContentMessage::Success(links) => {
@@ -67,6 +78,10 @@ impl Component for Content {
             }
             ContentMessage::SuccessContent(content) => {
                 self.content = content;
+                true
+            }
+            ContentMessage::SuccessContentNormal(content) => {
+                self.content_normal = content;
                 true
             }
             _ => false,
@@ -118,19 +133,17 @@ impl Content {
     }
 
     fn get_content(&self) -> Html {
-        let mut messages = vec![];
-        for elem in &self.content {
-            for content in &elem.content {
-                messages.push(content)
-            }
-        }
-        messages
+        self.content_normal
             .iter()
             .map(|el| {
                 html!(
-                    <li>
-                        <div>{el.link_url.clone()}</div>
-                        <div>{el.title.clone()}</div>
+                    <li class="content-element">
+                        <div class="content-image-container">
+                            <img class="content-image" src={el.logo_url.clone()}/>
+                        </div>
+                        <div class="content-title">
+                            <div>{el.title.clone()}</div>
+                        </div>
                     </li>
                 )
             })

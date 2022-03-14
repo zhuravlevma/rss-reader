@@ -1,6 +1,7 @@
 .content {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
     margin: 1rem;
 }
 
@@ -13,11 +14,10 @@
 }
 
 .container-content {
-    background-color: #fff;
     width: 65%;
     border-radius: 0.5rem;
     box-shadow: 4px 4px 15px 0px rgba(34, 60, 80, 0.14);
-    padding: 0.5rem;
+    padding: 0.5rem 0;
 }
 
 .content-header {
