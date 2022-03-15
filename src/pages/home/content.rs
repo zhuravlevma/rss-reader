@@ -139,10 +139,10 @@ impl Content {
                 html!(
                     <li class="content-element">
                         <div class="content-image-container">
-                            <img class="content-image" src={el.logo_url.clone()}/>
+                            <div><i class="far content-icon fa-envelope"></i></div>
                         </div>
                         <div class="content-title">
-                            <div>{el.title.clone()}</div>
+                            <a target="_blank" href={el.link_url.clone()}>{el.title.clone()}</a>
                         </div>
                     </li>
                 )

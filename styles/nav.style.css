@@ -38,7 +38,7 @@
     display: flex;
     justify-content: space-between;
     align-content: center;
-    background-color: #c7c7c7;
+    background-color: #eaeaea;
     padding: 0.5rem;
-    box-shadow: 4px 4px 4px 0px rgba(34, 60, 80, 0.2);
+    /*box-shadow: 4px 4px 4px 0px rgba(34, 60, 80, 0.2);*/
 }

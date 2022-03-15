@@ -129,7 +129,7 @@ pub struct ContentModel {
     pub description: Option<String>,
     pub date: String,
     pub link_id: String,
-    pub logo_url: String,
+    pub logo_url: Option<String>,
 }
 
 pub async fn get_normal_content(token: String) -> Result<Vec<ContentModel>, Box<dyn Error>> {
