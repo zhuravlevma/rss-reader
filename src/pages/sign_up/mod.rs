@@ -1,6 +1,6 @@
 use crate::api::sign_up_api;
 use crate::components::nav::NavComponent;
-use crate::{Route, UserState};
+use crate::router::Route;
 use gloo_timers::callback::Interval;
 use log::info;
 use std::rc::Rc;
@@ -10,6 +10,7 @@ use yew::{events::Event, html, Component, Context, Html};
 use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
 use yewdux::prelude::BasicStore;
+use crate::store::UserStore;
 
 pub enum SignUpMessage {
     Tick,
@@ -18,7 +19,7 @@ pub enum SignUpMessage {
     InputUsername(String),
     InputPassword(String),
     InputPasswordRepeat(String),
-    UserState(Rc<UserState>),
+    UserState(Rc<UserStore>),
 }
 
 pub enum Stages {
@@ -31,8 +32,8 @@ pub struct SignUpPage {
     username: String,
     password: String,
     password_repeat: String,
-    dispatch: Dispatch<BasicStore<UserState>>,
-    state: Rc<UserState>,
+    dispatch: Dispatch<BasicStore<UserStore>>,
+    state: Rc<UserStore>,
     stage: Stages,
 }
 

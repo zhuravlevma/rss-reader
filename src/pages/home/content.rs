@@ -1,5 +1,4 @@
-use crate::api::{get_content, get_links, ContentModel, Link};
-use crate::UserState;
+use crate::api::{get_content, get_links};
 use gloo_timers::callback::Interval;
 use gloo_utils;
 use std::rc::Rc;
@@ -7,22 +6,24 @@ use web_sys::window;
 use yew::{function_component, html, Component, Context, Html, Properties};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
+use crate::dto::{ContentDto, LinkDto};
+use crate::store::UserStore;
 
 pub enum ContentMessage {
     Tick,
-    UserState(Rc<UserState>),
-    Success(Vec<Link>),
-    SuccessContentNormal(Vec<ContentModel>),
+    UserState(Rc<UserStore>),
+    Success(Vec<LinkDto>),
+    SuccessContentNormal(Vec<ContentDto>),
     Next,
     Back,
 }
 
 pub struct ContentPage {
-    _dispatch: Dispatch<BasicStore<UserState>>,
-    state: Rc<UserState>,
+    _dispatch: Dispatch<BasicStore<UserStore>>,
+    state: Rc<UserStore>,
     _interval: Interval,
-    links: Vec<Link>,
-    content: Vec<ContentModel>,
+    links: Vec<LinkDto>,
+    content: Vec<ContentDto>,
     start: u32,
     take: u32,
 }

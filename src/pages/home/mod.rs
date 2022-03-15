@@ -1,12 +1,13 @@
 use crate::components::auth_alert::AuthAlertComponent;
 use crate::components::nav::NavComponent;
-use crate::UserState;
 use content::ContentPage;
 use gloo_timers::callback::Interval;
 use std::rc::Rc;
 use yew::{html, Component, Context, Html};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
+use crate::store::UserStore;
+
 pub enum Stages {
     Auth,
     UnAuth,
@@ -14,11 +15,11 @@ pub enum Stages {
 
 pub enum HomeMessage {
     Tick,
-    UserState(Rc<UserState>),
+    UserState(Rc<UserStore>),
 }
 pub struct HomePage {
-    _dispatch: Dispatch<BasicStore<UserState>>,
-    state: Rc<UserState>,
+    _dispatch: Dispatch<BasicStore<UserStore>>,
+    state: Rc<UserStore>,
     _interval: Interval,
     stage: Stages,
 }

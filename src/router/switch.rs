@@ -1,19 +1,6 @@
+use yew::{Html, html};
 use crate::pages::{home::HomePage, sign_in::SignInPage, sign_up::SignUpPage};
-use yew::prelude::*;
-use yew_router::prelude::*;
-
-#[derive(Clone, Routable, PartialEq)]
-pub enum Route {
-    #[at("/")]
-    Home,
-    #[at("/login")]
-    SignIn,
-    #[at("/signup")]
-    SignUp,
-    #[not_found]
-    #[at("/404")]
-    NotFound,
-}
+use crate::router::Route;
 
 pub fn switch(routes: &Route) -> Html {
     match routes {

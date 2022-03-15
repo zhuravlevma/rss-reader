@@ -1,13 +1,6 @@
-use routing::switch;
-use routing::Route;
+use router::{Route, switch};
 use yew::prelude::*;
 use yew_router::prelude::*;
-
-#[derive(Clone, Default)]
-pub struct UserState {
-    token: String,
-    user_id: String,
-}
 
 enum Msg {}
 struct RootComponent {}
@@ -33,8 +26,9 @@ fn main() {
     yew::start_app::<RootComponent>();
 }
 
-mod api;
 mod components;
 mod pages;
-mod routing;
-mod user_list;
+mod store;
+mod router;
+mod dto;
+mod api;

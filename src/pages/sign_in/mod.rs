@@ -1,9 +1,7 @@
 use crate::api::sign_in_api;
 use crate::components::nav::NavComponent;
-use crate::{routing, UserState};
 use gloo_timers::callback::Interval;
 use log::info;
-use routing::Route;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use web_sys::{EventTarget, FocusEvent, HtmlInputElement};
@@ -11,6 +9,8 @@ use yew::{events::Event, html, Callback, Component, Context, Html};
 use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
 use yewdux::prelude::BasicStore;
+use crate::store::UserStore;
+use crate::router::Route;
 
 pub enum SignInMessage {
     Tick,
@@ -18,7 +18,7 @@ pub enum SignInMessage {
     Success(String),
     InputUsername(String),
     InputPassword(String),
-    UserState(Rc<UserState>),
+    UserState(Rc<UserStore>),
 }
 
 pub enum Stages {
@@ -30,8 +30,8 @@ pub struct SignInPage {
     _interval: Interval,
     username: String,
     password: String,
-    dispatch: Dispatch<BasicStore<UserState>>,
-    state: Rc<UserState>,
+    dispatch: Dispatch<BasicStore<UserStore>>,
+    state: Rc<UserStore>,
     stage: Stages,
 }
 
