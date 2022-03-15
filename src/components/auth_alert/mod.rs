@@ -21,7 +21,7 @@ impl Component for AuthAlertComponent {
                 <div class="auth-alert-container-links">
                     {"Welcome. Please"}<Link <Route> classes={"auth-alert-link"} to={Route::SignIn}>
                        {"  log in  "}
-                    </Link<Route>>{"or"}<Link <Route> classes={"auth-alert-link"} to={Route::SignIn}>
+                    </Link<Route>>{"or"}<Link <Route> classes={"auth-alert-link"} to={Route::SignUp}>
                            {"  register  "}
                     </Link<Route>>
                 </div>

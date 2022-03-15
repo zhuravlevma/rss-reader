@@ -1,7 +1,7 @@
 use crate::components::auth_alert::AuthAlertComponent;
 use crate::components::nav::NavComponent;
 use crate::UserState;
-use content::Content;
+use content::ContentPage;
 use gloo_timers::callback::Interval;
 use std::rc::Rc;
 use yew::{html, Component, Context, Html};
@@ -17,7 +17,7 @@ pub enum HomeMessage {
     UserState(Rc<UserState>),
 }
 pub struct HomePage {
-    dispatch: Dispatch<BasicStore<UserState>>,
+    _dispatch: Dispatch<BasicStore<UserState>>,
     state: Rc<UserState>,
     _interval: Interval,
     stage: Stages,
@@ -31,7 +31,7 @@ impl Component for HomePage {
         let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(HomeMessage::UserState));
         Self {
-            dispatch,
+            _dispatch: dispatch,
             _interval,
             state: Default::default(),
             stage: Stages::UnAuth,
@@ -59,7 +59,7 @@ impl Component for HomePage {
                 html! (
                     <main>
                         <NavComponent/>
-                        <Content />
+                        <ContentPage />
                     </main>
                 )
             }

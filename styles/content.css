@@ -1,14 +1,17 @@
 .content-element {
     display: flex;
-    align-items: center;
+    /*align-items: st;*/
     background-color: #fafafa;
     border: 1px solid #ccc;
     border-radius: 0.3rem;
     font-weight: 400;
-    height: 40px;
+    /*height: 40px;*/
     padding: 1.5rem 1rem;
+    flex-direction: column;
+
     /*justify-content: space-between;*/
 }
+
 
 .content-image-container {
     display: flex;
@@ -28,11 +31,30 @@
 }
 
 .content-title {
-    /*margin-left: 1rem;*/
+    margin-bottom: 0.5rem;
     /*width: 75%;*/
     /*text-align: right;*/
 }
 
 .content-icon {
     font-size: 20px;
+}
+
+.content-desc {
+    font-weight: 300;
+}
+
+.content-paging {
+    display: flex;
+}
+
+.content-paging-info {
+    display: flex;
+    padding: 0.5rem;
+    font-weight: 400;
+}
+
+.content-paging-button {
+    background-color: #fff;
+    font-size: 25px;
 }
