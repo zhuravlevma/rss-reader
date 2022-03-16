@@ -1,5 +1,7 @@
 use crate::api::sign_in_api;
 use crate::components::nav::NavComponent;
+use crate::router::Route;
+use crate::store::{AuthState, UserStore};
 use log::info;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
@@ -8,8 +10,6 @@ use yew::{events::Event, html, Callback, Component, Context, Html};
 use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
 use yewdux::prelude::BasicStore;
-use crate::store::{AuthState, UserStore};
-use crate::router::Route;
 
 pub enum SignInMessage {
     SignIn,

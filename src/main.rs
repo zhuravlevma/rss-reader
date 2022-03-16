@@ -1,4 +1,4 @@
-use router::{Route, switch};
+use router::{switch, Route};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -26,9 +26,9 @@ fn main() {
     yew::start_app::<RootComponent>();
 }
 
-mod components;
-mod pages;
-mod store;
-mod router;
-mod dto;
 mod api;
+mod components;
+mod dto;
+mod pages;
+mod router;
+mod store;

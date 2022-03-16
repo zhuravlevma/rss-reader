@@ -1,6 +1,6 @@
-use yew::{Html, html};
 use crate::pages::{home::HomePage, sign_in::SignInPage, sign_up::SignUpPage};
 use crate::router::Route;
+use yew::{html, Html};
 
 pub fn switch(routes: &Route) -> Html {
     match routes {

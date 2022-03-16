@@ -1,9 +1,9 @@
+use crate::dto::{AccessTokenDto, ContentDto, LinkDto, UserDto};
 use js_sys::JSON;
 use reqwasm::http::Request;
 use serde_json::json;
 use std::error::Error;
 use wasm_bindgen::JsValue;
-use crate::dto::{AccessTokenDto, ContentDto, LinkDto, UserDto};
 
 pub async fn sign_in_api(
     username: String,
@@ -64,11 +64,11 @@ pub async fn get_content(
         "http://127.0.0.1:3000/content?start={}&take={}",
         start, take
     ))
-        .header("Authorization", &format!("Bearer {}", token))
-        .send()
-        .await
-        .unwrap()
-        .json()
-        .await?;
+    .header("Authorization", &format!("Bearer {}", token))
+    .send()
+    .await
+    .unwrap()
+    .json()
+    .await?;
     Ok(res)
 }

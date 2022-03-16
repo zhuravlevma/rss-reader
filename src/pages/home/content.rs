@@ -1,13 +1,13 @@
 use crate::api::get_content;
+use crate::components::link::LinkComponent;
+use crate::dto::ContentDto;
+use crate::store::UserStore;
 use gloo_utils;
 use std::rc::Rc;
-use web_sys::{Element, window};
+use web_sys::{window, Element};
 use yew::{function_component, html, Component, Context, Html, Properties};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
-use crate::dto::ContentDto;
-use crate::store::UserStore;
-use crate::components::link::LinkComponent;
 
 pub enum ContentMessage {
     UserState(Rc<UserStore>),
@@ -87,7 +87,7 @@ impl Component for ContentPage {
                 window().unwrap().scroll_to_with_x_and_y(0.0, 0.0);
                 self.content = content;
                 true
-            },
+            }
         }
     }
 
@@ -148,7 +148,7 @@ pub fn safe_html(props: &Props) -> Html {
     let mut i = 0;
     while let Some(element) = res.item(i) {
         element.set_class_name("image-fix");
-        i+=1;
+        i += 1;
     }
     Html::VRef(div.into())
 }

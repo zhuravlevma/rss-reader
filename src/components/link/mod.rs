@@ -1,14 +1,14 @@
+use crate::api::get_links;
+use crate::dto::LinkDto;
+use crate::store::UserStore;
 use std::rc::Rc;
 use yew::prelude::*;
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
-use crate::api::get_links;
-use crate::dto::LinkDto;
-use crate::store::UserStore;
 
 pub enum LinkMessage {
     UserState(Rc<UserStore>),
-    Success(Vec<LinkDto>)
+    Success(Vec<LinkDto>),
 }
 
 pub struct LinkComponent {
@@ -44,14 +44,13 @@ impl Component for LinkComponent {
                     }
                 });
                 true
-            },
+            }
             LinkMessage::Success(data) => {
                 self.links = data;
                 true
             }
         }
     }
-
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html!(

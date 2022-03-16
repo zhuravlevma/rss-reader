@@ -1,6 +1,7 @@
 use crate::api::sign_up_api;
 use crate::components::nav::NavComponent;
 use crate::router::Route;
+use crate::store::UserStore;
 use log::info;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
@@ -9,7 +10,6 @@ use yew::{events::Event, html, Component, Context, Html};
 use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
 use yewdux::prelude::BasicStore;
-use crate::store::UserStore;
 
 pub enum SignUpMessage {
     SignUp,
