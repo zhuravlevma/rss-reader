@@ -7,6 +7,5 @@ pub struct ContentDto {
     pub title: String,
     pub description: Option<String>,
     pub date: String,
-    pub link_id: String,
-    pub logo_url: Option<String>,
+    pub link_id: String
 }

@@ -1,8 +1,7 @@
 use crate::api::{get_content, get_links};
-use gloo_timers::callback::Interval;
 use gloo_utils;
 use std::rc::Rc;
-use web_sys::window;
+use web_sys::{Element, window};
 use yew::{function_component, html, Component, Context, Html, Properties};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
@@ -10,7 +9,6 @@ use crate::dto::{ContentDto, LinkDto};
 use crate::store::UserStore;
 
 pub enum ContentMessage {
-    Tick,
     UserState(Rc<UserStore>),
     Success(Vec<LinkDto>),
     SuccessContentNormal(Vec<ContentDto>),
@@ -21,7 +19,6 @@ pub enum ContentMessage {
 pub struct ContentPage {
     _dispatch: Dispatch<BasicStore<UserStore>>,
     state: Rc<UserStore>,
-    _interval: Interval,
     links: Vec<LinkDto>,
     content: Vec<ContentDto>,
     start: u32,
@@ -32,12 +29,9 @@ impl Component for ContentPage {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let callback = ctx.link().callback(|_| ContentMessage::Tick);
-        let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(ContentMessage::UserState));
         Self {
             _dispatch: dispatch,
-            _interval,
             state: Default::default(),
             links: vec![],
             content: vec![],
@@ -106,7 +100,6 @@ impl Component for ContentPage {
                 self.content = content;
                 true
             }
-            _ => false,
         }
     }
 
@@ -114,7 +107,9 @@ impl Component for ContentPage {
         html! {
             <div class="content">
                 <div class="container-links">
-                    <div class="links-header">{"Links"}</div>
+                    <div class="links-header-container">
+                        <i class="fa-solid fa-link link-icon"></i><div class="links-header">{"links"}</div>
+                    </div>
                     <ul>{self.html_list()}</ul>
                 </div>
                 <div class="container-content">
@@ -143,19 +138,16 @@ impl ContentPage {
             .map(|el| {
                 html!(
                     <li class = "link">
-                        <i class="fa-solid fa-link link-icon"></i>
                         <div class = "link-main">
-                            <div class = "link-name">
-                                <p class = "link-name-label">{"name:"}</p>
-                                <p class = "link-name-content">{el.name.clone()}</p>
-                            </div>
-                            <div class = "link-href">
-                                <p class = "link-href-label">{"link:"}</p>
-                                <a target = "_blank" class = "link-href-content" href={el.link.clone()}>{el.link.clone()}</a>
-                            </div>
-                            <div class = "link-description">
-                                <p class = "link-description-label">{"Description:"}</p>
-                                <p class = "link-description-content">{el.description.clone()}</p>
+                            <input class="link-checkbox" type="checkbox" id="scales" name="scales" checked={true}/>
+                            // <div class = "link-name">
+                            //     <p class = "link-name-content">{el.name.clone()}</p>
+                            // </div>
+                            <div class = "link-info">
+                                <label class="link-name-content" for="checkbox">{el.name.clone()}</label>
+                                <div class = "link-description">
+                                    <a target = "_blank" class = "link-href-content" href={el.link.clone()}>{el.link.clone()}</a>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -191,7 +183,13 @@ pub struct Props {
 
 #[function_component(SafeHtml)]
 pub fn safe_html(props: &Props) -> Html {
-    let div = gloo_utils::document().create_element("div").unwrap();
+    let div: Element = gloo_utils::document().create_element("div").unwrap();
     div.set_inner_html(&props.html.clone());
+    let res = div.get_elements_by_tag_name("img");
+    let mut i = 0;
+    while let Some(element) = res.item(i) {
+        element.set_class_name("image-fix");
+        i+=1;
+    }
     Html::VRef(div.into())
 }

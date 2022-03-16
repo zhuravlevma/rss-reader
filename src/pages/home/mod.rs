@@ -1,12 +1,11 @@
 use crate::components::auth_alert::AuthAlertComponent;
 use crate::components::nav::NavComponent;
 use content::ContentPage;
-use gloo_timers::callback::Interval;
 use std::rc::Rc;
 use yew::{html, Component, Context, Html};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
-use crate::store::UserStore;
+use crate::store::{UserStore, AuthState};
 
 pub enum Stages {
     Auth,
@@ -14,13 +13,11 @@ pub enum Stages {
 }
 
 pub enum HomeMessage {
-    Tick,
     UserState(Rc<UserStore>),
 }
 pub struct HomePage {
     _dispatch: Dispatch<BasicStore<UserStore>>,
     state: Rc<UserStore>,
-    _interval: Interval,
     stage: Stages,
 }
 impl Component for HomePage {
@@ -28,12 +25,9 @@ impl Component for HomePage {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let callback = ctx.link().callback(|_| HomeMessage::Tick);
-        let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(HomeMessage::UserState));
         Self {
             _dispatch: dispatch,
-            _interval,
             state: Default::default(),
             stage: Stages::UnAuth,
         }
@@ -49,14 +43,13 @@ impl Component for HomePage {
                     self.stage = Stages::Auth
                 }
                 true
-            }
-            _ => false,
+            },
         }
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
-        match self.stage {
-            Stages::Auth => {
+        match self.state.auth_state {
+            AuthState::Auth => {
                 html! (
                     <main>
                         <NavComponent/>
@@ -64,7 +57,7 @@ impl Component for HomePage {
                     </main>
                 )
             }
-            Stages::UnAuth => {
+            AuthState::UnAuth => {
                 html!(
                     <main>
                         <NavComponent/>
@@ -72,6 +65,8 @@ impl Component for HomePage {
                     </main>
                 )
             }
+            // AuthState::Auth => {}
+            // AuthState::UnAuth => {}
         }
     }
 }

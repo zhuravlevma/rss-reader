@@ -1,7 +1,6 @@
 use crate::api::sign_up_api;
 use crate::components::nav::NavComponent;
 use crate::router::Route;
-use gloo_timers::callback::Interval;
 use log::info;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
@@ -13,7 +12,6 @@ use yewdux::prelude::BasicStore;
 use crate::store::UserStore;
 
 pub enum SignUpMessage {
-    Tick,
     SignUp,
     Success(String),
     InputUsername(String),
@@ -28,7 +26,6 @@ pub enum Stages {
 }
 
 pub struct SignUpPage {
-    _interval: Interval,
     username: String,
     password: String,
     password_repeat: String,
@@ -42,8 +39,6 @@ impl Component for SignUpPage {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let callback = ctx.link().callback(|_| SignUpMessage::Tick);
-        let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(SignUpMessage::UserState));
         Self {
             username: "".to_string(),
@@ -52,7 +47,6 @@ impl Component for SignUpPage {
             stage: Stages::SignUp,
             dispatch,
             state: Default::default(),
-            _interval,
         }
     }
 
@@ -96,7 +90,6 @@ impl Component for SignUpPage {
                 self.state = state;
                 true
             }
-            _ => true,
         }
     }
 

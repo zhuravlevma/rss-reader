@@ -1,6 +1,5 @@
 use crate::api::sign_in_api;
 use crate::components::nav::NavComponent;
-use gloo_timers::callback::Interval;
 use log::info;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
@@ -9,11 +8,10 @@ use yew::{events::Event, html, Callback, Component, Context, Html};
 use yew_router::prelude::*;
 use yewdux::dispatch::{Dispatch, Dispatcher};
 use yewdux::prelude::BasicStore;
-use crate::store::UserStore;
+use crate::store::{AuthState, UserStore};
 use crate::router::Route;
 
 pub enum SignInMessage {
-    Tick,
     SignIn,
     Success(String),
     InputUsername(String),
@@ -27,7 +25,6 @@ pub enum Stages {
 }
 
 pub struct SignInPage {
-    _interval: Interval,
     username: String,
     password: String,
     dispatch: Dispatch<BasicStore<UserStore>>,
@@ -40,14 +37,11 @@ impl Component for SignInPage {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let callback = ctx.link().callback(|_| SignInMessage::Tick);
-        let _interval = Interval::new(200, move || callback.emit(()));
         let dispatch = Dispatch::bridge_state(ctx.link().callback(SignInMessage::UserState));
         Self {
             username: "".to_string(),
             password: "".to_string(),
             dispatch,
-            _interval,
             state: Default::default(),
             stage: Stages::SignUp,
         }
@@ -77,6 +71,7 @@ impl Component for SignInPage {
             }
             SignInMessage::Success(token) => {
                 self.dispatch.reduce(|s| s.token = token);
+                self.dispatch.reduce(|s| s.auth_state = AuthState::Auth);
                 self.stage = Stages::Success;
                 true
             }
@@ -84,7 +79,6 @@ impl Component for SignInPage {
                 self.state = state;
                 true
             }
-            _ => true,
         }
     }
 

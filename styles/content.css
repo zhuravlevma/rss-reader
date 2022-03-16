@@ -58,3 +58,7 @@
     background-color: #fff;
     font-size: 25px;
 }
+
+.image-fix {
+    max-height: 200px;
+}
