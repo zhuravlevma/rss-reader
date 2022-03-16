@@ -1,16 +1,16 @@
-use crate::api::{get_content, get_links};
+use crate::api::get_content;
 use gloo_utils;
 use std::rc::Rc;
 use web_sys::{Element, window};
 use yew::{function_component, html, Component, Context, Html, Properties};
 use yewdux::dispatch::Dispatch;
 use yewdux::prelude::BasicStore;
-use crate::dto::{ContentDto, LinkDto};
+use crate::dto::ContentDto;
 use crate::store::UserStore;
+use crate::components::link::LinkComponent;
 
 pub enum ContentMessage {
     UserState(Rc<UserStore>),
-    Success(Vec<LinkDto>),
     SuccessContentNormal(Vec<ContentDto>),
     Next,
     Back,
@@ -19,11 +19,11 @@ pub enum ContentMessage {
 pub struct ContentPage {
     _dispatch: Dispatch<BasicStore<UserStore>>,
     state: Rc<UserStore>,
-    links: Vec<LinkDto>,
     content: Vec<ContentDto>,
     start: u32,
     take: u32,
 }
+
 impl Component for ContentPage {
     type Message = ContentMessage;
     type Properties = ();
@@ -33,7 +33,6 @@ impl Component for ContentPage {
         Self {
             _dispatch: dispatch,
             state: Default::default(),
-            links: vec![],
             content: vec![],
             start: 0,
             take: 15,
@@ -47,13 +46,6 @@ impl Component for ContentPage {
                 if self.state.token.is_empty() || self.state.token.eq("error") {
                     return true;
                 }
-                let token = self.state.token.clone();
-                ctx.link().send_future(async {
-                    match get_links(token).await {
-                        Ok(data) => ContentMessage::Success(data),
-                        Err(_) => ContentMessage::Success(vec![]),
-                    }
-                });
                 let token = self.state.token.clone();
                 let start = self.start;
                 let take = self.take;
@@ -91,27 +83,18 @@ impl Component for ContentPage {
                 });
                 false
             }
-            ContentMessage::Success(links) => {
-                self.links = links;
-                true
-            }
             ContentMessage::SuccessContentNormal(content) => {
                 window().unwrap().scroll_to_with_x_and_y(0.0, 0.0);
                 self.content = content;
                 true
-            }
+            },
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        html! {
+        html! (
             <div class="content">
-                <div class="container-links">
-                    <div class="links-header-container">
-                        <i class="fa-solid fa-link link-icon"></i><div class="links-header">{"links"}</div>
-                    </div>
-                    <ul>{self.html_list()}</ul>
-                </div>
+                <LinkComponent />
                 <div class="container-content">
                     <ul class="content-list">
                         <ul>{self.get_content()}</ul>
@@ -127,35 +110,11 @@ impl Component for ContentPage {
                     </div>
                 </div>
             </div>
-        }
+        )
     }
 }
 
 impl ContentPage {
-    fn html_list(&self) -> Html {
-        self.links
-            .iter()
-            .map(|el| {
-                html!(
-                    <li class = "link">
-                        <div class = "link-main">
-                            <input class="link-checkbox" type="checkbox" id="scales" name="scales" checked={true}/>
-                            // <div class = "link-name">
-                            //     <p class = "link-name-content">{el.name.clone()}</p>
-                            // </div>
-                            <div class = "link-info">
-                                <label class="link-name-content" for="checkbox">{el.name.clone()}</label>
-                                <div class = "link-description">
-                                    <a target = "_blank" class = "link-href-content" href={el.link.clone()}>{el.link.clone()}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                )
-            })
-            .collect::<Html>()
-    }
-
     fn get_content(&self) -> Html {
         self.content
             .iter()
