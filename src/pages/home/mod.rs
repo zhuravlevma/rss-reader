@@ -64,8 +64,7 @@ impl Component for HomePage {
                         <AuthAlertComponent/>
                     </main>
                 )
-            } // AuthState::Auth => {}
-              // AuthState::UnAuth => {}
+            }
         }
     }
 }
