@@ -36,7 +36,9 @@
 }
 
 .form-element-button {
-    background-color: #99d98c;
+    /*background-color: #99d98c;*/
+    background-color:  #fff;
+    border: 1px solid black;
     padding: 1rem;
     border-radius: 0.1rem;
     width: 40%;
@@ -49,4 +51,38 @@
 .form-header {
     font-weight: 700;
     font-size: 20px;
+}
+
+.form-container-link {
+    width: 80%;
+}
+
+.form-link {
+    width: 100%;
+    display: flex;
+}
+
+.link-trash {
+    margin-right: 0.4rem;
+}
+
+.form-element-link-label {
+    margin-right: 0.4rem;
+}
+
+.form-element-link-button {
+    margin-left: 0.3rem;
+    background-color:  #fff;
+    border: 1px solid black;
+    padding: 0.3rem;
+    border-radius: 0.1rem;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.form-element-link-input {
+    border: 1px solid black;
+    padding: 0.3rem 0.3rem;
+    font-size: 16px;
 }
