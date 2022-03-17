@@ -5,5 +5,6 @@ mod user_dto;
 
 pub use access_token_dto::AccessTokenDto;
 pub use content_dto::ContentDto;
+pub use link_dto::LinkCreatedDto;
 pub use link_dto::LinkDto;
 pub use user_dto::UserDto;

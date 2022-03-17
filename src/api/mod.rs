@@ -1,4 +1,4 @@
-use crate::dto::{AccessTokenDto, ContentDto, LinkDto, UserDto};
+use crate::dto::{AccessTokenDto, ContentDto, LinkCreatedDto, LinkDto, UserDto};
 use js_sys::JSON;
 use reqwasm::http::Request;
 use serde_json::json;
@@ -70,5 +70,28 @@ pub async fn get_content(
     .unwrap()
     .json()
     .await?;
+    Ok(res)
+}
+
+pub async fn create_link(
+    token: String,
+    link_name: String,
+    link_url: String,
+) -> Result<LinkCreatedDto, Box<dyn Error>> {
+    let body = json!({
+        "name": link_name,
+        "link": link_url,
+    });
+    let js_body = JsValue::from_serde(&body).unwrap();
+    let json = JSON::stringify(&js_body).unwrap();
+    let res = Request::post("http://127.0.0.1:3000/link")
+        .header("Content-Type", "application/json")
+        .header("Authorization", &format!("Bearer {}", token))
+        .body(json)
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await?;
     Ok(res)
 }

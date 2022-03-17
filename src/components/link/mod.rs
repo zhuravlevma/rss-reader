@@ -1,7 +1,7 @@
-use crate::api::get_links;
-use crate::dto::LinkDto;
+use crate::api::{create_link, get_links};
+use crate::dto::{LinkCreatedDto, LinkDto};
 use crate::store::UserStore;
-use log::info;
+use log::{error, info};
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use web_sys::{EventTarget, HtmlInputElement};
@@ -13,7 +13,10 @@ pub enum LinkMessage {
     UserState(Rc<UserStore>),
     Success(Vec<LinkDto>),
     InputLink(String),
+    InputName(String),
     Add,
+    SuccessAdded(LinkCreatedDto),
+    Error(String),
 }
 
 pub struct LinkComponent {
@@ -21,6 +24,7 @@ pub struct LinkComponent {
     state: Rc<UserStore>,
     links: Vec<LinkDto>,
     link: String,
+    name: String,
 }
 impl Component for LinkComponent {
     type Message = LinkMessage;
@@ -33,6 +37,7 @@ impl Component for LinkComponent {
             state: Default::default(),
             links: vec![],
             link: "".to_string(),
+            name: "".to_string(),
         }
     }
 
@@ -60,9 +65,35 @@ impl Component for LinkComponent {
                 self.link = data;
                 true
             }
+            LinkMessage::InputName(data) => {
+                self.name = data;
+                true
+            }
             LinkMessage::Add => {
                 info!("{}", self.link);
+                info!("{}", self.name);
+                let link = self.link.clone();
+                let name = self.name.clone();
+                let token = self.state.token.clone();
+                ctx.link().send_future(async {
+                    match create_link(token, name, link).await {
+                        Ok(data) => LinkMessage::SuccessAdded(data),
+                        Err(_) => LinkMessage::Error("error".to_string()),
+                    }
+                });
                 true
+            }
+            LinkMessage::SuccessAdded(data) => {
+                self.links.push(LinkDto {
+                    link_id: data.link_id,
+                    name: data.name,
+                    link: data.link,
+                });
+                true
+            }
+            LinkMessage::Error(data) => {
+                error!("error {}", data);
+                false
             }
         }
     }
@@ -76,6 +107,7 @@ impl Component for LinkComponent {
                 </div>
                 <div class="form-container-link">
                     <form class="form-link" onsubmit={change}>
+                        {self.html_input_name(ctx)}
                         {self.html_input_link(ctx)}
                         {self.html_button_login(ctx)}
                     </form>
@@ -116,11 +148,30 @@ impl LinkComponent {
         });
         html! {
             <div class="form-element-link">
-                <label class="form-element-link-label" for="username-input">
+                <label class="form-element-link-label" for="link-input">
                     { "Link url" }
                 </label>
                 <input class="form-element-link-input" onchange={change}
-                        id="username-input"
+                        id="link-input"
+                        type="text"
+                />
+            </div>
+        }
+    }
+
+    fn html_input_name(&self, ctx: &Context<Self>) -> Html {
+        let change: Callback<Event> = ctx.link().batch_callback(|e: Event| {
+            let target: Option<EventTarget> = e.target();
+            let input = target.and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
+            input.map(|input| LinkMessage::InputName(input.value()))
+        });
+        html! {
+            <div class="form-element-link">
+                <label class="form-element-link-label" for="link-name-input">
+                    { "Custom Name" }
+                </label>
+                <input class="form-element-link-input" onchange={change}
+                        id="link-name-input"
                         type="text"
                 />
             </div>
