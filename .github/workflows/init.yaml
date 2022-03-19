@@ -19,6 +19,8 @@ jobs:
         run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       - name: Add environment
         run: eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      - name: Wasm
+        run: rustup target add wasm32-unknown-unknown
       - name: Install trunk
         run: brew install trunk
       - name: Build
