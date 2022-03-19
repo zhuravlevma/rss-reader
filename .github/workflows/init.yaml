@@ -15,9 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install wget
-        run: sudo apt-get install wget
+      - name: Install brew
+        run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - name: Add environment
+        run: eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
       - name: Install trunk
-        run: wget -qO- https://github.com/thedodd/trunk/releases/download/${VERSION}/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
+        run: brew install trunk
       - name: Build
         run: trunk build
