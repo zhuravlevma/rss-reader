@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="en"><head>
     <title>RSS reader</title>
     <link rel="icon" href="/open-book-6597a23e387f5f13.png">
-    <link rel="stylesheet" href="/nav.style-6f3b33b0f128b0ce.css">
-    <link rel="stylesheet" href="/link-61d564b2229e6cbf.css">
+    <link rel="stylesheet" href="/nav.style-3d2a61764d4002e3.css">
+    <link rel="stylesheet" href="/link-c19a16c725b0eb3d.css">
     <link rel="stylesheet" href="/form.style-7aed53cc2376f5c2.css">
     <link rel="stylesheet" href="/auth-alert-7e7991ccb511ab28.css">
     <link rel="stylesheet" href="/content-41552c58283a3669.css">
@@ -14,9 +14,35 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 
-<link rel="preload" href="/index-a89a2eb41967ef52_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/index-a89a2eb41967ef52.js"></head>
+<link rel="preload" href="/index-bad8d72adb8f5d68_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/index-bad8d72adb8f5d68.js"></head>
 <body>
 
 
-<script type="module">import init from '/index-a89a2eb41967ef52.js';init('/index-a89a2eb41967ef52_bg.wasm');</script></body></html>
+<script type="module">import init from '/index-bad8d72adb8f5d68.js';init('/index-bad8d72adb8f5d68_bg.wasm');</script><script>(function () {
+    var url = 'ws://' + window.location.host + '/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>

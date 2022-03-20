@@ -1,7 +1,7 @@
 use crate::api::{create_link, get_links};
 use crate::dto::{LinkCreatedDto, LinkDto};
 use crate::store::UserStore;
-use log::{error, info};
+use log::{error};
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use web_sys::{EventTarget, HtmlInputElement};
@@ -15,6 +15,7 @@ pub enum LinkMessage {
     InputLink(String),
     InputName(String),
     Add,
+    Remove(MouseEvent),
     SuccessAdded(LinkCreatedDto),
     Error(String),
 }
@@ -70,8 +71,6 @@ impl Component for LinkComponent {
                 true
             }
             LinkMessage::Add => {
-                info!("{}", self.link);
-                info!("{}", self.name);
                 let link = self.link.clone();
                 let name = self.name.clone();
                 let token = self.state.token.clone();
@@ -90,6 +89,10 @@ impl Component for LinkComponent {
                     link: data.link,
                 });
                 true
+            },
+            LinkMessage::Remove(e) => {
+                e.target().unwrap();
+                false
             }
             LinkMessage::Error(data) => {
                 error!("error {}", data);
@@ -112,14 +115,14 @@ impl Component for LinkComponent {
                         {self.html_button_login(ctx)}
                     </form>
                 </div>
-                <ul>{self.html_list()}</ul>
+                <ul>{self.html_list(ctx)}</ul>
             </div>
         )
     }
 }
 
 impl LinkComponent {
-    fn html_list(&self) -> Html {
+    fn html_list(&self, ctx: &Context<Self>) -> Html {
         self.links
             .iter()
             .map(|el| {
@@ -127,7 +130,7 @@ impl LinkComponent {
                     <li class = "link">
                         <div class = "link-main">
                             <div class = "link-info">
-                                <button><i class="fa-regular fa-trash-can link-trash"></i></button>
+                                <button link_id={el.link_id.clone()} onclick={ctx.link().callback(LinkMessage::Remove)}><i class="fa-regular fa-trash-can link-trash"></i></button>
                                 <label class="link-name-content" for="checkbox">{el.name.clone()}</label>
                                 <div class = "link-description">
                                     <a target = "_blank" class = "link-href-content" href={el.link.clone()}>{el.link.clone()}</a>

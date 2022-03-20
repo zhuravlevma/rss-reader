@@ -51,3 +51,8 @@
 .exit-button {
     font-size: 18px;
 }
+
+.main-nav-group {
+    display: flex;
+    align-items: center;
+}

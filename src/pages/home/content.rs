@@ -1,6 +1,5 @@
 use yew::{html, Component, Context, Html};
 
-use crate::components::link::LinkComponent;
 use crate::components::news::NewsComponent;
 
 pub enum ContentMessage {}
@@ -18,7 +17,6 @@ impl Component for ContentPage {
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! (
             <div class="content">
-                <LinkComponent />
                 <NewsComponent />
             </div>
         )

@@ -67,13 +67,20 @@ impl Component for NavComponent {
                                 <i class="main-nav-logo fas fa-mail-bulk"></i>
                             </Link<Route>>
                         </div>
-                         <div class="nav-exit-button">
-                            <div class="main-nav-button-exit">
-                                <button onclick={ctx.link().callback(|_| NavMessage::Exit)} class="main-nav-link">
-                                    <i class="exit-button fas fa-sign-out-alt"></i>
-                                 </button>
-                            </div>
-                         </div>
+                        <div class="main-nav-group">
+                            <div class="nav-exit-button">
+                                <Link <Route> classes={"main-nav-link"} to={Route::Settings}>
+                                    <i class="fas fa-tools"></i>
+                                </Link<Route>>
+                             </div>
+                            <div class="nav-exit-button">
+                                <div class="main-nav-button-exit">
+                                    <button onclick={ctx.link().callback(|_| NavMessage::Exit)} class="main-nav-link">
+                                        <i class="exit-button fas fa-sign-out-alt"></i>
+                                     </button>
+                                </div>
+                             </div>
+                        </div>
                     </nav>
                 )
             }

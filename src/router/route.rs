@@ -8,6 +8,8 @@ pub enum Route {
     SignIn,
     #[at("/signup")]
     SignUp,
+    #[at("/settings")]
+    Settings,
     #[not_found]
     #[at("/404")]
     NotFound,
