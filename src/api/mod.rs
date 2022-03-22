@@ -75,11 +75,9 @@ pub async fn get_content(
 
 pub async fn create_link(
     token: String,
-    link_name: String,
     link_url: String,
 ) -> Result<LinkCreatedDto, Box<dyn Error>> {
     let body = json!({
-        "name": link_name,
         "link": link_url,
     });
     let js_body = JsValue::from_serde(&body).unwrap();
@@ -88,6 +86,17 @@ pub async fn create_link(
         .header("Content-Type", "application/json")
         .header("Authorization", &format!("Bearer {}", token))
         .body(json)
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await?;
+    Ok(res)
+}
+
+pub async fn remove_link(token: String, link_id: String) -> Result<bool, Box<dyn Error>> {
+    let res = Request::delete(&format!("http://127.0.0.1:3000/link/{}", link_id,))
+        .header("Authorization", &format!("Bearer {}", token))
         .send()
         .await
         .unwrap()

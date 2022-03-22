@@ -1,4 +1,6 @@
-use crate::pages::{home::HomePage, sign_in::SignInPage, sign_up::SignUpPage, settings::SettingsPage};
+use crate::pages::{
+    home::HomePage, settings::SettingsPage, sign_in::SignInPage, sign_up::SignUpPage,
+};
 use crate::router::Route;
 use yew::{html, Html};
 
