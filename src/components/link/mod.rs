@@ -92,12 +92,9 @@ impl Component for LinkComponent {
     fn view(&self, ctx: &Context<Self>) -> Html {
         let change = |e: FocusEvent| e.prevent_default();
         html!(
-            <div class="container-links">
-                <div class="links-header-container">
-                    <i class="fa-solid fa-link link-icon"></i><div class="links-header">{"links"}</div>
-                </div>
-                <div class="form-container-link">
-                    <form class="form-link" onsubmit={change}>
+            <div class="row-direction">
+                <div class="form-container form-link-container center">
+                    <form class="form form-link" onsubmit={change}>
                         {self.html_input_link(ctx)}
                         {self.html_button_login(ctx)}
                     </form>
@@ -132,11 +129,11 @@ impl LinkComponent {
             input.map(|input| LinkMessage::InputLink(input.value()))
         });
         html! {
-            <div class="form-element-link">
-                <label class="form-element-link-label" for="link-input">
+            <div class="form-element column-direction center">
+                <label class="primary-input-label" for="link-input">
                     { "Link url" }
                 </label>
-                <input class="form-element-link-input" onchange={change}
+                <input class="primary-input" onchange={change}
                         id="link-input"
                         type="text"
                 />
@@ -146,8 +143,8 @@ impl LinkComponent {
 
     fn html_button_login(&self, ctx: &Context<Self>) -> Html {
         html!(
-            <div class="form-element-link">
-                <button class="form-element-link-button" onclick={ctx.link().callback(|_| LinkMessage::Add)}>
+            <div class="form-element column-direction center">
+                <button class="primary-button" onclick={ctx.link().callback(|_| LinkMessage::Add)}>
                     {"add "}<i class="fa-solid fa-plus"></i>
                 </button>
             </div>

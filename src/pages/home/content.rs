@@ -16,7 +16,7 @@ impl Component for ContentPage {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html! (
-            <div class="content">
+            <div>
                 <NewsComponent />
             </div>
         )

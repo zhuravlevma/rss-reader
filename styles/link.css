@@ -1,21 +1,3 @@
-.content {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    /*margin: 1rem;*/
-    /*padding: 0.5rem;*/
-    background-color:  #f8f9fa;
-    width: 100%;
-}
-
-.container-links {
-    width: 30%;
-    /*border-radius: 0.5rem;*/
-    /*box-shadow: 4px 4px 15px 0px rgba(34, 60, 80, 0.14);*/
-    padding-left: 0.5rem;
-    /*border: 1px solid #ccc;*/
-}
-
 .container-content {
     /*width: 70%;*/
     display:flex;

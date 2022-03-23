@@ -87,10 +87,10 @@ impl Component for SignInPage {
         match self.stage {
             Stages::SignUp => {
                 html!(
-                    <main class="main-page">
+                    <main>
                         <NavComponent/>
-                        <div class="form-container">
-                            <form class="form" onsubmit={change}>
+                        <div class="center form-container">
+                            <form class="form form-auth" onsubmit={change}>
                                 {self.get_header()}
                                 {self.html_input_username(ctx)}
                                 {self.html_input_password(ctx)}
@@ -112,8 +112,8 @@ impl Component for SignInPage {
 impl SignInPage {
     fn html_button_login(&self, ctx: &Context<Self>) -> Html {
         html!(
-            <div class="form-element">
-                <button cursor="pointer" class="form-element-button" onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
+            <div class="form-element column-direction center">
+                <button cursor="pointer" class="primary-button" onclick={ctx.link().callback(|_| SignInMessage::SignIn)}>
                     { "Login" }
                 </button>
             </div>
@@ -127,11 +127,11 @@ impl SignInPage {
             input.map(|input| SignInMessage::InputUsername(input.value()))
         });
         html! {
-            <div class="form-element">
-                <label class="form-element-label" for="username-input">
+            <div class="form-element column-direction center">
+                <label class="primary-input-label" for="username-input">
                     { "Username" }
                 </label>
-                <input class="form-element-input" onchange={change}
+                <input class="primary-input" onchange={change}
                         id="username-input"
                         type="text"
                 />
@@ -146,11 +146,11 @@ impl SignInPage {
             input.map(|input| SignInMessage::InputPassword(input.value()))
         });
         html! {
-            <div class="form-element">
-                <label class="form-element-label" for="password-input">
+            <div class="form-element column-direction center">
+                <label class="primary-input-label" for="password-input">
                     { "Password" }
                 </label>
-                <input class="form-element-input" onchange={change}
+                <input class="primary-input" onchange={change}
                     id="password-input"
                     type="password"
                 />
@@ -160,7 +160,7 @@ impl SignInPage {
 
     fn get_header(&self) -> Html {
         html!(
-            <h3 class="form-element form-header">{"Please, sign in"}</h3>
+            <h3 class="form-element column-direction center form-header">{"Please, sign in"}</h3>
         )
     }
 }

@@ -66,11 +66,9 @@ impl Component for Link {
                     <li class = "link">
                         <div class = "link-main">
                             <div class = "link-info">
-                                        // <button onclick={ctx.link().callback(move |_| LinkMessage::RemoveById(index))}><i class="fa-regular fa-trash-can link-trash"></i></button>
-                                <button onclick={ctx.link().callback(|_| LinkMessage::Remove)}>
+                               <button onclick={ctx.link().callback(|_| LinkMessage::Remove)}>
                                     <i class="fa-regular fa-trash-can link-trash"></i>
                                 </button>
-                                <label class="link-name-content" for="checkbox">{ctx.props().link.link.clone()}</label>
                                 <div class = "link-description">
                                     <a target = "_blank" class = "link-href-content" href={ctx.props().link.link.clone()}>{ctx.props().link.link.clone()}</a>
                                 </div>

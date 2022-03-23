@@ -1,0 +1,32 @@
+.form-header {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.form-element {
+    margin-bottom: 1.7rem;
+    width: 100%;
+}
+
+.form-container {
+    padding-top: 6rem;
+}
+
+.form {
+    padding: 3rem 3rem 1rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 4px 4px 15px 0px rgba(34, 60, 80, 0.14);
+}
+
+.form-auth {
+    width: 30%;
+}
+
+.form-link {
+    width: 60%;
+}
+
+.form-link-container {
+    width: 50%;
+}

@@ -98,10 +98,10 @@ impl Component for SignUpPage {
         match self.stage {
             Stages::SignUp => {
                 html!(
-                    <main class="main-page">
+                    <main>
                         <NavComponent/>
-                        <div class="form-container">
-                            <form class="form" onsubmit={change}>
+                        <div class="form-container center">
+                            <form class="form form-auth" onsubmit={change}>
                                 {self.get_header()}
                                 {self.html_input_username(ctx)}
                                 {self.html_input_password(ctx)}
@@ -122,8 +122,8 @@ impl Component for SignUpPage {
 impl SignUpPage {
     fn html_button_signup(&self, ctx: &Context<Self>) -> Html {
         html!(
-            <div class="form-element">
-                <button cursor="pointer" class="form-element-button" onclick={ctx.link().callback(|_| SignUpMessage::SignUp)}>
+            <div class="form-element column-direction center">
+                <button cursor="pointer" class="primary-button" onclick={ctx.link().callback(|_| SignUpMessage::SignUp)}>
                     { "SignUp" }
                 </button>
             </div>
@@ -137,11 +137,11 @@ impl SignUpPage {
             input.map(|input| SignUpMessage::InputUsername(input.value()))
         });
         html! {
-            <div class="form-element">
-                <label class="form-element-label" for="username-input-signup">
+            <div class="form-element column-direction center">
+                <label class="primary-input-label" for="username-input-signup">
                     { "Username:" }
                 </label>
-                <input class="form-element-input" onchange={change}
+                <input class="primary-input" onchange={change}
                     id="username-input-signup"
                     type="text"
                 />
@@ -156,11 +156,11 @@ impl SignUpPage {
             input.map(|input| SignUpMessage::InputPassword(input.value()))
         });
         html! {
-            <div class="form-element">
-                <label class="form-element-label" for="password-input-signup">
+            <div class="form-element column-direction center">
+                <label class="primary-input-label" for="password-input-signup">
                     { "Password:" }
                 </label>
-                <input class="form-element-input" onchange={change}
+                <input class="primary-input" onchange={change}
                     id="password-input-signup"
                     type="password"
                 />
@@ -175,11 +175,11 @@ impl SignUpPage {
             input.map(|input| SignUpMessage::InputPasswordRepeat(input.value()))
         });
         html! {
-            <div class="form-element">
-                <label class="form-element-label" for="password-input-signup-repeat">
+            <div class="form-element column-direction center">
+                <label class="primary-input-label" for="password-input-signup-repeat">
                     { "Password repeat:" }
                 </label>
-                <input class="form-element-input" onchange={change}
+                <input class="primary-input" onchange={change}
                     id="password-input-signup-repeat"
                     type="password"
                 />
@@ -189,7 +189,7 @@ impl SignUpPage {
 
     fn get_header(&self) -> Html {
         html!(
-            <h3 class="form-element">{"Please, sign up"}</h3>
+            <h3 class="form-element column-direction center">{"Please, sign up"}</h3>
         )
     }
 }

@@ -1,15 +1,10 @@
 .content-element {
-    display: flex;
-    /*align-items: st;*/
     background-color: #fafafa;
     border: 1px solid #ccc;
     border-radius: 0.3rem;
     font-weight: 400;
-    /*height: 40px;*/
     padding: 1.5rem 1rem;
     flex-direction: column;
-
-    /*justify-content: space-between;*/
 }
 
 
