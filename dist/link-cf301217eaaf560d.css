@@ -1,0 +1,16 @@
+.link-main {
+    display: flex;
+    margin-right: 1rem;
+    padding: 0.3rem 0;
+    align-items: baseline;
+}
+
+.list-link {
+    margin-top: 2rem;
+}
+
+.link-href-content {
+    color: #4D77FF;
+    font-weight: 400;
+    text-decoration: underline;
+}

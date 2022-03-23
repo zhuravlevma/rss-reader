@@ -80,6 +80,7 @@ impl Component for LinkComponent {
                     link_id: data.link_id,
                     link: data.link,
                 });
+                self.link = "".to_string();
                 true
             }
             LinkMessage::Error(data) => {
@@ -99,7 +100,7 @@ impl Component for LinkComponent {
                         {self.html_button_login(ctx)}
                     </form>
                 </div>
-                <ul>{self.html_list()}</ul>
+                <ul class="list-link">{self.html_list()}</ul>
             </div>
         )
     }
@@ -136,6 +137,7 @@ impl LinkComponent {
                 <input class="primary-input" onchange={change}
                         id="link-input"
                         type="text"
+                        value={self.link.clone()}
                 />
             </div>
         }

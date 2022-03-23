@@ -9,6 +9,12 @@
     font-size: 18px;
 }
 
+.button-icon {
+    background: white;
+}
+
 .link-trash {
     margin-right: 0.4rem;
+    font-size: 20px;
+    color: red;
 }

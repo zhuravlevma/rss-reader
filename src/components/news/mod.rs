@@ -68,7 +68,9 @@ impl Component for NewsComponent {
                 false
             }
             NewsMessage::Back => {
-                self.start -= 15;
+                if self.start >= 15 {
+                    self.start -= 15;
+                }
                 let take = self.take;
                 let start = self.start;
                 let token = self.state.token.clone();
@@ -94,15 +96,13 @@ impl Component for NewsComponent {
                 <ul class="content-list">
                     <ul>{self.get_content()}</ul>
                 </ul>
-                <div class="content-paging">
-                    <button onclick={ctx.link().callback(|_| NewsMessage::Back)} type="button" class="content-paging-button"><i class="fas fa-angle-left"></i></button>
-                    <div class="content-paging-info">
-                        <p>{self.start}</p>
-                        <p>{"    ...   "}</p>
-                        <p>{self.start + self.take}</p>
-                    </div>
-                    <button onclick={ctx.link().callback(|_| NewsMessage::Next)} type="button" class="content-paging-button"><i class="fas fa-angle-right"></i></button>
-                </div>
+                {
+                    if self.content.is_empty() {
+                        html!(<div></div>)
+                    } else {
+                        {self.get_paging(ctx)}
+                    }
+                }
             </div>
         )
     }
@@ -126,6 +126,20 @@ impl NewsComponent {
                 )
             })
             .collect::<Html>()
+    }
+
+    fn get_paging(&self, ctx: &Context<Self>) -> Html {
+        html! (
+            <div class="content-paging center">
+                <button onclick={ctx.link().callback(|_| NewsMessage::Back)} type="button" class="content-paging-button"><i class="fas fa-angle-left"></i></button>
+                <div class="content-paging-info">
+                    <p>{self.start}</p>
+                    <p>{"    ...   "}</p>
+                    <p>{self.start + self.take}</p>
+                </div>
+                <button onclick={ctx.link().callback(|_| NewsMessage::Next)} type="button" class="content-paging-button"><i class="fas fa-angle-right"></i></button>
+            </div>
+        )
     }
 }
 

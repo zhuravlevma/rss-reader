@@ -1,0 +1,20 @@
+.primary-button {
+    background-color: #fff;
+    border: 1px solid black;
+    padding: 1rem;
+    border-radius: 0.1rem;
+    width: 40%;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.button-icon {
+    background: white;
+}
+
+.link-trash {
+    margin-right: 0.4rem;
+    font-size: 20px;
+    color: red;
+}

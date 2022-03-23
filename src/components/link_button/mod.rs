@@ -65,8 +65,8 @@ impl Component for Link {
                 html! (
                     <li class = "link">
                         <div class = "link-main">
-                            <div class = "link-info">
-                               <button onclick={ctx.link().callback(|_| LinkMessage::Remove)}>
+                            <div class = "link-info row-direction">
+                               <button class="button-icon" onclick={ctx.link().callback(|_| LinkMessage::Remove)}>
                                     <i class="fa-regular fa-trash-can link-trash"></i>
                                 </button>
                                 <div class = "link-description">

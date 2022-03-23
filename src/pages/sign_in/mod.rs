@@ -3,6 +3,7 @@ use crate::components::nav::NavComponent;
 use crate::router::Route;
 use crate::store::{AuthState, UserStore};
 use log::info;
+use reqwasm::Error;
 use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use web_sys::{EventTarget, FocusEvent, HtmlInputElement};
@@ -17,11 +18,13 @@ pub enum SignInMessage {
     InputUsername(String),
     InputPassword(String),
     UserState(Rc<UserStore>),
+    Error(Error),
 }
 
 pub enum Stages {
     SignUp,
     Success,
+    Error(String),
 }
 
 pub struct SignInPage {
@@ -64,7 +67,7 @@ impl Component for SignInPage {
                 ctx.link().send_future(async {
                     match sign_in_api(username, password).await {
                         Ok(data) => SignInMessage::Success(data.access_token),
-                        Err(_) => SignInMessage::Success("error".to_string()),
+                        Err(error) => SignInMessage::Error(error),
                     }
                 });
                 false
@@ -79,12 +82,24 @@ impl Component for SignInPage {
                 self.state = state;
                 true
             }
+            SignInMessage::Error(error) => {
+                info!(
+                    "name {} pwd {}",
+                    self.username.clone(),
+                    self.password.clone()
+                );
+                match error {
+                    Error::JsError(error) => self.stage = Stages::Error(error.name),
+                    Error::SerdeError(error) => self.stage = Stages::Error(error.to_string()),
+                }
+                true
+            }
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let change = |e: FocusEvent| e.prevent_default();
-        match self.stage {
+        match &self.stage {
             Stages::SignUp => {
                 html!(
                     <main>
@@ -92,6 +107,22 @@ impl Component for SignInPage {
                         <div class="center form-container">
                             <form class="form form-auth" onsubmit={change}>
                                 {self.get_header()}
+                                {self.html_input_username(ctx)}
+                                {self.html_input_password(ctx)}
+                                {self.html_button_login(ctx)}
+                            </form>
+                        </div>
+                    </main>
+                )
+            }
+            Stages::Error(_error) => {
+                html!(
+                    <main>
+                        <NavComponent/>
+                        <div class="center form-container">
+                            <form class="form form-auth" onsubmit={change}>
+                                {self.get_header()}
+                                {self.get_error_message()}
                                 {self.html_input_username(ctx)}
                                 {self.html_input_password(ctx)}
                                 {self.html_button_login(ctx)}
@@ -133,6 +164,7 @@ impl SignInPage {
                 </label>
                 <input class="primary-input" onchange={change}
                         id="username-input"
+                        value={self.username.clone()}
                         type="text"
                 />
             </div>
@@ -153,6 +185,7 @@ impl SignInPage {
                 <input class="primary-input" onchange={change}
                     id="password-input"
                     type="password"
+                    value={self.password.clone()}
                 />
             </div>
         }
@@ -161,6 +194,12 @@ impl SignInPage {
     fn get_header(&self) -> Html {
         html!(
             <h3 class="form-element column-direction center form-header">{"Please, sign in"}</h3>
+        )
+    }
+
+    fn get_error_message(&self) -> Html {
+        html!(
+            <h3 class="form-element column-direction center form-header error-message">{"Wrong credentials"}</h3>
         )
     }
 }
